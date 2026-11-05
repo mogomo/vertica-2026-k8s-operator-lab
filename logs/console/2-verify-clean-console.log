@@ -1,0 +1,20 @@
+Script started on 2026-11-05 00:13:19+02:00 [COMMAND="./vertica-k8s-lab.sh --verify-clean" TERM="screen" TTY="/dev/pts/1" COLUMNS="160" LINES="50"]
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  VERTICA K8S LAB — RESIDUE / REBOOT-SAFETY AUDIT
+  2026-11-05 00:13:19 | uptime: up 12 hours, 7 minutes
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    ✔ PASS Docker not installed (the lab's Docker, if any, was removed)
+    ✔ PASS No lab processes (kind/kubectl/helm/kubelet of the lab) running
+    ✔ PASS No systemd units created by the lab
+    ✔ PASS No cron entries referencing the lab
+    ✔ PASS No persistent sysctl configuration written by the lab
+    ✔ PASS Lab ports 35433/35434 are not listening
+    ✔ PASS Lab working directories removed from /opt/vertica-k8s-lab
+    ✔ PASS No lab context in /root/.kube/config
+    ℹ Host Vertica (read-only): host_vertica_version=v26.3.0-2 host_vertica_pids=none host_vertica_ports=none admintools_conf_mtime=1792244212 dbadmin_uid=1001 verticad_unit=enabled
+    ℹ Kernel values now: vm.max_map_count=4063232 fs.inotify.max_user_watches=65536 (runtime values reset at reboot)
+
+    ✔ RESULT: CLEAN — nothing from the lab is running or configured to start at boot.
+
+Script done on 2026-11-05 00:13:20+02:00 [COMMAND_EXIT_CODE="0"]

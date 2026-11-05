@@ -1,0 +1,243 @@
+Script started on 2026-11-05 00:42:55+02:00 [COMMAND="./vertica-k8s-lab.sh --demo" <not executed on terminal>]
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  VERTICA ON KUBERNETES — SQL DEMO
+  drop/create a table, load rows, query them in the Vertica pods | 2026-11-05 00:42:55
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━ STEP 1/9 ━━ Where the database runs   00:42:55
+  WHAT Each Vertica node is a pod of the StatefulSet vdb-primary, scheduled on a different Kubernetes worker.
+  ✔ SQL client pod ready [0s] — client pod: Running
+    ⎈ operator event LicenseValidationFail        no valid Vertica license found from secret vdb-license
+    ⎈ operator event LicenseValidationSucceeded   1 valid Vertica license found from secret 'vdb-license'
+    ⎈ operator event CreateDBStart                Starting create database
+    ⎈ operator event CreateDBSucceeded            Successfully created database with subcluster 'primary'. It took 34s
+    ⎈ operator event TLSConfigurationStarted      Starting to configure TLS for httpsNMA
+    ⎈ operator event TLSConfigurationSucceeded    Successfully set HTTP tls config
+    ⎈ operator event TLSConfigurationStarted      Starting to configure TLS for clientServer
+    ⎈ operator event TLSConfigurationSucceeded    Successfully set Server tls config
+    ⎈ operator event NMATLSCertRotationStarted    Start restarting nma with cert vdb-https-tls-k94jl
+    ⎈ operator event NMATLSCertRotationSucceeded  Successfully restarted nma with cert vdb-https-tls-k94jl
+    ⎈ operator event TLSConfigurationStarted      Starting to configure TLS for interNode
+    ⎈ operator event TLSConfigurationSucceeded    Successfully set Internode tls config
+    ⎈ operator event NodeRestartStarted           Starting database restart node of the following pods: vdb-primary-2
+    ⎈ operator event NodeRestartSucceeded         Successfully restarted database nodes and it took 24s
+    ⎈ operator event LicenseValidationSucceeded   1 valid Vertica license found from secret 'vdb-license'
+    ⎈ operator event NodeRestartStarted           Starting database restart node of the following pods: vdb-primary-2
+    ⎈ operator event NodeRestartSucceeded         Successfully restarted database nodes and it took 26s
+    ⎈ operator event StopDBStart                  Starting stop database on main cluster
+    ⎈ operator event StopDBSucceeded              Successfully stopped the database on main cluster.  It took 0s
+    ⎈ operator event TerminatingSubclusterPods    Terminating all pods of subcluster primary in main cluster
+    ⎈ operator event LicenseValidationSucceeded   1 valid Vertica license found from secret 'vdb-license'
+    ⎈ operator event ReviveDBStart                Starting revive database
+    ⎈ operator event ReviveDBSucceeded            Successfully revived database. It took 8s
+    ⎈ operator event ClusterRestartStarted        Starting restart of the main cluster
+    ⎈ operator event ClusterRestartSucceeded      Successfully restarted the main cluster and it took 27s
+    ⎈ operator event TLSConfigurationStarted      Starting to configure TLS for clientServer
+    ⎈ operator event TLSConfigurationSucceeded    Successfully set Server tls config
+    ⎈ operator event NMATLSCertRotationStarted    Start rotating nma cert from  to vdb-https-tls-k94jl
+    ⎈ operator event NMATLSCertRotationSucceeded  Successfully rotated nma cert from  to vdb-https-tls-k94jl
+    ⎈ operator event TLSConfigurationStarted      Starting to configure TLS for interNode
+    ⎈ operator event TLSConfigurationSucceeded    Successfully set Internode tls config
+    ⎈ operator event TLSConfigurationStarted      Starting to configure TLS for httpsNMA
+    ⎈ operator event TLSConfigurationSucceeded    Successfully set HTTP tls config
+    ⎈ operator event SubclusterAdded              Added new subcluster 'analytics'
+    ⎈ operator event AddNodeStart                 Starting add database node for pod(s) 'vdb-analytics-0'
+    ⎈ operator event AddNodeStart                 Starting add database node for pod(s) 'vdb-analytics-1'
+    ⎈ operator event AddNodeSucceeded             Successfully added database nodes and it took 19s
+    ⎈ operator event RebalanceShards              Successfully called 'rebalance_shards' for 'analytics'
+    ⎈ operator event RemoveNodesStart             Starting database remove node for pods 'vdb-analytics-1'
+    ⎈ operator event SuboptimalNodeCount          Subcluster 'analytics' has a suboptimal node count.  Consider increasing its size so that the shard to node ratio is 3:1 or less.
+    ⎈ operator event RemoveNodesSucceeded         Successfully removed nodes from database and it took 16s
+    ⎈ operator event RemoveSubcluserStart         Starting database remove subcluster for subcluster "analytics"
+    ⎈ operator event SubclusterRemoved            Removed subcluster "analytics" and it took 19s
+    ⎈ operator event NodeRestartStarted           Starting database restart node of the following pods: vdb-primary-2
+    ⎈ operator event NodeRestartSucceeded         Successfully restarted database nodes and it took 21s
+    ⎈ operator event LicenseValidationSucceeded   1 valid Vertica license found from secret 'vdb-license'
+    ⎈ operator event NodeRestartStarted           Starting database restart node of the following pods: vdb-primary-2
+    ⎈ operator event NodeRestartSucceeded         Successfully restarted database nodes and it took 28s
+    ⎈ operator event ArchiveExists                Attempted to create an archive that already exists
+    ⎈ operator event StopDBStart                  Starting stop database on main cluster
+    ⎈ operator event StopDBSucceeded              Successfully stopped the database on main cluster.  It took 5s
+    ⎈ operator event TerminatingSubclusterPods    Terminating all pods of subcluster primary in main cluster
+    ⎈ operator event LicenseValidationSucceeded   1 valid Vertica license found from secret 'vdb-license'
+    ⎈ operator event ReviveDBStart                Starting revive database
+    ⎈ operator event ReviveDBSucceeded            Successfully revived database. It took 9s
+    ⎈ operator event ClusterRestartStarted        Starting restart of the main cluster
+    ⎈ operator event ClusterRestartSucceeded      Successfully restarted the main cluster and it took 27s
+    ⎈ operator event TLSConfigurationStarted      Starting to configure TLS for clientServer
+    ⎈ operator event TLSConfigurationSucceeded    Successfully set Server tls config
+    ⎈ operator event NMATLSCertRotationStarted    Start rotating nma cert from  to vdb-https-tls-k94jl
+    ⎈ operator event NMATLSCertRotationSucceeded  Successfully rotated nma cert from  to vdb-https-tls-k94jl
+    ⎈ operator event TLSConfigurationStarted      Starting to configure TLS for interNode
+    ⎈ operator event TLSConfigurationSucceeded    Successfully set Internode tls config
+    ⎈ operator event TLSConfigurationStarted      Starting to configure TLS for httpsNMA
+    ⎈ operator event TLSConfigurationSucceeded    Successfully set HTTP tls config
+    ⎈ operator event SubclusterAdded              Added new subcluster 'analytics'
+    ⎈ operator event AddNodeStart                 Starting add database node for pod(s) 'vdb-analytics-0'
+    ⎈ operator event AddNodeStart                 Starting add database node for pod(s) 'vdb-analytics-1'
+    ⎈ operator event AddNodeSucceeded             Successfully added database nodes and it took 19s
+    ⎈ operator event RebalanceShards              Successfully called 'rebalance_shards' for 'analytics'
+    ⎈ operator event RemoveNodesStart             Starting database remove node for pods 'vdb-analytics-1'
+    ⎈ operator event SuboptimalNodeCount          Subcluster 'analytics' has a suboptimal node count.  Consider increasing its size so that the shard to node ratio is 3:1 or less.
+    ⎈ operator event RemoveNodesSucceeded         Successfully removed nodes from database and it took 19s
+    ⎈ operator event RemoveSubcluserStart         Starting database remove subcluster for subcluster "analytics"
+    ⎈ operator event SubclusterRemoved            Removed subcluster "analytics" and it took 19s
+  ✔ Database labdb ready [0s] — pods Ready 3/3 | Vertica nodes UP 3/3
+    $ kubectl -n vertica-lab get pods -l vertica-lab/db=vdb -o wide
+      │ NAME            READY   STATUS    RESTARTS        AGE     IP            NODE                  NOMINATED NODE   READINESS GATES
+      │ vdb-primary-0   2/2     Running   1 (2m41s ago)   3m29s   <ip>   vertica-lab-worker2   <none>           <none>
+      │ vdb-primary-1   2/2     Running   1 (2m41s ago)   3m29s   <ip>   vertica-lab-worker3   <none>           <none>
+      │ vdb-primary-2   2/2     Running   1 (2m41s ago)   3m29s   <ip>   vertica-lab-worker    <none>           <none>
+  ✔ Step 1 finished in 1s
+
+━━ STEP 2/9 ━━ Drop and (re)create a table   00:42:56
+  WHAT DROP TABLE IF EXISTS + CREATE TABLE in schema 'demo', segmented across all nodes by HASH(id).
+    ◆ SQL DDL
+      CREATE SCHEMA IF NOT EXISTS demo;
+      DROP TABLE IF EXISTS demo.city_temps CASCADE;
+      CREATE TABLE demo.city_temps (
+      id INT NOT NULL, city VARCHAR(30), country VARCHAR(20), reading_ts TIMESTAMP, temp_c NUMERIC(5,1)
+      ) ORDER BY id SEGMENTED BY HASH(id) ALL NODES;
+      SELECT column_name, data_type FROM columns WHERE table_schema='demo' AND table_name='city_temps' ORDER BY ordinal_position;
+      │ NOTICE 4214:  Object "demo" already exists; nothing was done
+      │  column_name |  data_type
+      │ -------------+--------------
+      │  id          | int
+      │  city        | varchar(30)
+      │  country     | varchar(20)
+      │  reading_ts  | timestamp
+      │  temp_c      | numeric(5,1)
+      │ (5 rows)
+  ✔ Table demo.city_temps created
+  ✔ Step 2 finished in 1s
+
+━━ STEP 3/9 ━━ Load a few rows   00:42:57
+  WHAT INSERT 10 rows with one multi-row INSERT and COMMIT (Eon Mode writes ROS files and uploads them to communal S3).
+    ◆ SQL INSERT + COMMIT
+      INSERT INTO demo.city_temps (id, city, country, reading_ts, temp_c)
+      SELECT id, city, country, ts::TIMESTAMP, t::NUMERIC(5,1) FROM (
+      SELECT 1 AS id,'Tel Aviv' AS city,'Israel' AS country,'2026-11-03 08:00:00' AS ts,24.5 AS t
+      UNION ALL SELECT 2,'Jerusalem','Israel','2026-11-03 08:00:00',19.0
+      UNION ALL SELECT 3,'Haifa','Israel','2026-11-03 08:00:00',22.1
+      UNION ALL SELECT 4,'London','UK','2026-11-03 08:00:00',11.2
+      UNION ALL SELECT 5,'New York','USA','2026-11-03 08:00:00',9.8
+      UNION ALL SELECT 6,'Tokyo','Japan','2026-11-03 08:00:00',16.4
+      │  OUTPUT
+      │ --------
+      │      10
+      │ (1 row)
+      │
+      │  rows_loaded
+      │ -------------
+      │           10
+      │ (1 row)
+  ✔ Step 3 finished in 0s
+
+━━ STEP 4/9 ━━ Query the rows   00:42:57
+    ◆ SQL All rows
+      SELECT id, city, country, reading_ts, temp_c FROM demo.city_temps ORDER BY id;
+      │  id |   city    |  country  |     reading_ts      | temp_c
+      │ ----+-----------+-----------+---------------------+--------
+      │   1 | Tel Aviv  | Israel    | 2026-11-03 08:00:00 |   24.5
+      │   2 | Jerusalem | Israel    | 2026-11-03 08:00:00 |   19.0
+      │   3 | Haifa     | Israel    | 2026-11-03 08:00:00 |   22.1
+      │   4 | London    | UK        | 2026-11-03 08:00:00 |   11.2
+      │   5 | New York  | USA       | 2026-11-03 08:00:00 |    9.8
+      │   6 | Tokyo     | Japan     | 2026-11-03 08:00:00 |   16.4
+      │   7 | Sydney    | Australia | 2026-11-03 08:00:00 |   21.7
+      │   8 | Tel Aviv  | Israel    | 2026-11-03 14:00:00 |   26.0
+      │   9 | London    | UK        | 2026-11-03 14:00:00 |   13.0
+      │  10 | Tokyo     | Japan     | 2026-11-03 14:00:00 |   18.9
+      │ (10 rows)
+    ◆ SQL Aggregation per country
+      SELECT country, COUNT(*) AS readings, MIN(temp_c) AS min_c, MAX(temp_c) AS max_c, ROUND(AVG(temp_c),1) AS avg_c FROM demo.city_temps GROUP BY country ORDER BY avg_c DESC;
+      │   country  | readings | min_c | max_c | avg_c
+      │ -----------+----------+-------+-------+-------
+      │  Israel    |        4 |  19.0 |  26.0 |  22.9
+      │  Australia |        1 |  21.7 |  21.7 |  21.7
+      │  Japan     |        2 |  16.4 |  18.9 |  17.6
+      │  UK        |        2 |  11.2 |  13.0 |  12.1
+      │  USA       |        1 |   9.8 |   9.8 |   9.8
+      │ (5 rows)
+    ◆ SQL Window function: change between readings per city
+      SELECT city, reading_ts, temp_c, temp_c - LAG(temp_c) OVER (PARTITION BY city ORDER BY reading_ts) AS delta_c FROM demo.city_temps WHERE city IN ('Tel Aviv','London','Tokyo') ORDER BY city, reading_ts;
+      │    city   |     reading_ts      | temp_c | delta_c
+      │ ----------+---------------------+--------+---------
+      │  London   | 2026-11-03 08:00:00 |   11.2 |
+      │  London   | 2026-11-03 14:00:00 |   13.0 |     1.8
+      │  Tel Aviv | 2026-11-03 08:00:00 |   24.5 |
+      │  Tel Aviv | 2026-11-03 14:00:00 |   26.0 |     1.5
+      │  Tokyo    | 2026-11-03 08:00:00 |   16.4 |
+      │  Tokyo    | 2026-11-03 14:00:00 |   18.9 |     2.5
+      │ (6 rows)
+  ✔ Step 4 finished in 0s
+
+━━ STEP 5/9 ━━ Where the rows are physically stored   00:42:57
+  WHAT Rows are hash-segmented over the nodes; in Eon Mode the files also live in communal storage (MinIO).
+    ◆ SQL Rows per Vertica node
+      SELECT node_name, SUM(row_count) AS rows_on_node FROM projection_storage WHERE anchor_table_schema='demo' AND anchor_table_name='city_temps' GROUP BY 1 ORDER BY 1;
+      │     node_name     | rows_on_node
+      │ ------------------+--------------
+      │  v_labdb_node0001 |            4
+      │  v_labdb_node0002 |            2
+      │  v_labdb_node0003 |            4
+      │ (3 rows)
+  ✔ Step 5 finished in 0s
+
+━━ STEP 6/9 ━━ Same query executed INSIDE every Vertica pod   00:42:57
+  WHAT kubectl exec into each pod's 'server' container and run vsql there — every node sees the full table.
+    $ kubectl exec -n vertica-lab vdb-primary-0 -c server -- vsql -c "SELECT local_node_name(), COUNT(*), AVG(temp_c) FROM demo.city_temps"
+  ✔ pod vdb-primary-0 (k8s node vertica-lab-worker2) -> v_labdb_node0001 | 10 | 18.3
+    $ kubectl exec -n vertica-lab vdb-primary-1 -c server -- vsql -c "SELECT local_node_name(), COUNT(*), AVG(temp_c) FROM demo.city_temps"
+  ✔ pod vdb-primary-1 (k8s node vertica-lab-worker3) -> v_labdb_node0002 | 10 | 18.3
+    $ kubectl exec -n vertica-lab vdb-primary-2 -c server -- vsql -c "SELECT local_node_name(), COUNT(*), AVG(temp_c) FROM demo.city_temps"
+  ✔ pod vdb-primary-2 (k8s node vertica-lab-worker) -> v_labdb_node0003 | 10 | 18.3
+  ✔ Step 6 finished in 1s
+
+━━ STEP 7/9 ━━ External access from the workstation (host vsql -> NodePort 127.0.0.1:35433)   00:42:58
+  WHAT Uses the host's existing /opt/vertica/bin/vsql binary read-only; it connects to the Kubernetes DB, not to the host DB.
+    $ /opt/vertica/bin/vsql -m prefer -h 127.0.0.1 -p 35433 -U dbadmin -d labdb -c "SELECT ..."
+      │     served_by     | rows | hottest
+      │ ------------------+------+---------
+      │  v_labdb_node0002 |   10 |    26.0
+      │ (1 row)
+  ✔ Workstation -> Kubernetes NodePort -> Vertica pod works
+  ✔ Step 7 finished in 0s
+
+━━ STEP 8/9 ━━ Machine-to-machine login: an ETL job authenticates with a JWT, not a password   00:42:58
+  WHAT A Kubernetes Job gets a token from Keycloak (client_credentials) and queries Vertica as svc_etl over TLS.
+    $ kubectl apply -f /opt/vertica-k8s-lab/manifests/etl-job.yaml
+  ✔ ETL job finished [3s] — job vlab-etl-job succeeded/failed: 1/
+    $ kubectl -n vertica-lab logs job/vlab-etl-job
+      │ 1) requesting a token from the identity provider (grant_type=client_credentials)
+      │    token received (933 characters, signed JWT; not printed)
+      │ 2) logging into Vertica with the token over TLS
+      │  db_user | auth  |  tls   |  country  | readings | avg_c
+      │ ---------+-------+--------+-----------+----------+-------
+      │  svc_etl | OAuth | Server | Israel    |        4 |  22.9
+      │  svc_etl | OAuth | Server | Australia |        1 |  21.7
+      │  svc_etl | OAuth | Server | Japan     |        2 |  17.6
+      │  svc_etl | OAuth | Server | UK        |        2 |  12.1
+      │  svc_etl | OAuth | Server | USA       |        1 |   9.8
+      │ (5 rows)
+      │
+  ✔ ETL job finished: authenticated with a JWT (OAuth 2.0 / JWT validation in Vertica) — no database password involved
+  ✔ Step 8 finished in 4s
+
+━━ STEP 9/9 ━━ Try it yourself   00:43:02
+      Interactive vsql inside a pod:
+        sudo /opt/vertica-k8s-lab/bin/kubectl --kubeconfig /opt/vertica-k8s-lab/state/kubeconfig -n vertica-lab exec -it vdb-primary-0 -c server -- /opt/vertica/bin/vsql -U dbadmin -d labdb
+      From the workstation:   /opt/vertica/bin/vsql -m prefer -h 127.0.0.1 -p 35433 -U dbadmin -d labdb
+      Password:          sudo grep DB_PASSWORD /opt/vertica-k8s-lab/state/secrets.env | cut -d= -f2
+      The table demo.city_temps is kept; re-running --demo drops and recreates it.
+  ✔ Step 9 finished in 0s
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  DEMO COMPLETE
+  Live view: sudo /opt/vertica-k8s-lab/vertica-k8s-lab.sh --info --watch 5
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  Log file: /opt/vertica-k8s-lab/logs/demo-20261105-004255.log
+
+Script done on 2026-11-05 00:43:02+02:00 [COMMAND_EXIT_CODE="0"]

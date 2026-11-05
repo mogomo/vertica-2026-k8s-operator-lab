@@ -1,0 +1,21 @@
+# Never commit licenses, generated credentials or lab state
+*.dat
+secrets.env
+state/
+kubeconfig
+*.pem
+*.key
+
+# Local run output (the published logs live in logs/)
+/reports/
+/manifests/
+/downloads/
+/cache/
+/tmp/
+/bin/
+*-console.log
+!logs/console/*-console.log
+
+# OS / editor files
+.DS_Store
+*.swp

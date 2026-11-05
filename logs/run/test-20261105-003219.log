@@ -1,0 +1,963 @@
+2026-11-05 00:32:19 | vertica-k8s-lab.sh 1.1.0 mode=test user=<admin> pid=954845
+2026-11-05 00:32:19 | ==== VERTICA KUBERNETES OPERATOR 26.2 — PRODUCTION-READINESS TEST SUITE (2026-11-05 00:32:19 | log: /opt/vertica-k8s-lab/logs/test-20261105-003219.log)
+2026-11-05 00:32:19 | INFO  Host Vertica snapshot (read-only) taken at start of run:
+2026-11-05 00:32:19 |       host_vertica_version = v26.3.0-2
+2026-11-05 00:32:19 |       host_vertica_pids = none
+2026-11-05 00:32:19 |       host_vertica_ports = none
+2026-11-05 00:32:19 |       admintools_conf_mtime = 1792244212
+2026-11-05 00:32:19 |       dbadmin_uid = 1001
+2026-11-05 00:32:19 |       verticad_unit = enabled
+2026-11-05 00:32:19 | INFO  Preparing: making sure the lab cluster and database are running
+2026-11-05 00:32:19 | OK    kind node containers set to restart=no (nothing auto-starts after an Ubuntu reboot)
+2026-11-05 00:32:19 | OK    Kubernetes nodes Ready [0s] — nodes Ready 4/4
+2026-11-05 00:32:19 | OK    SQL client pod ready [0s] — client pod: Running
+2026-11-05 00:32:20 | EVENT vdb Normal LicenseValidationFail no valid Vertica license found from secret vdb-license
+2026-11-05 00:32:20 | EVENT vdb Normal LicenseValidationSucceeded 1 valid Vertica license found from secret 'vdb-license'
+2026-11-05 00:32:20 | EVENT vdb Normal CreateDBStart Starting create database
+2026-11-05 00:32:20 | EVENT vdb Normal CreateDBSucceeded Successfully created database with subcluster 'primary'. It took 34s
+2026-11-05 00:32:20 | EVENT vdb Normal TLSConfigurationStarted Starting to configure TLS for httpsNMA
+2026-11-05 00:32:20 | EVENT vdb Normal TLSConfigurationSucceeded Successfully set HTTP tls config
+2026-11-05 00:32:20 | EVENT vdb Normal TLSConfigurationStarted Starting to configure TLS for clientServer
+2026-11-05 00:32:20 | EVENT vdb Normal TLSConfigurationSucceeded Successfully set Server tls config
+2026-11-05 00:32:20 | EVENT vdb Normal NMATLSCertRotationStarted Start restarting nma with cert vdb-https-tls-k94jl
+2026-11-05 00:32:20 | EVENT vdb Normal NMATLSCertRotationSucceeded Successfully restarted nma with cert vdb-https-tls-k94jl
+2026-11-05 00:32:20 | EVENT vdb Normal TLSConfigurationStarted Starting to configure TLS for interNode
+2026-11-05 00:32:20 | EVENT vdb Normal TLSConfigurationSucceeded Successfully set Internode tls config
+2026-11-05 00:32:20 | EVENT vdb Normal NodeRestartStarted Starting database restart node of the following pods: vdb-primary-2
+2026-11-05 00:32:20 | EVENT vdb Normal NodeRestartSucceeded Successfully restarted database nodes and it took 24s
+2026-11-05 00:32:20 | EVENT vdb Normal LicenseValidationSucceeded 1 valid Vertica license found from secret 'vdb-license'
+2026-11-05 00:32:20 | EVENT vdb Normal NodeRestartStarted Starting database restart node of the following pods: vdb-primary-2
+2026-11-05 00:32:20 | EVENT vdb Normal NodeRestartSucceeded Successfully restarted database nodes and it took 26s
+2026-11-05 00:32:20 | EVENT vdb Normal StopDBStart Starting stop database on main cluster
+2026-11-05 00:32:20 | EVENT vdb Normal StopDBSucceeded Successfully stopped the database on main cluster.  It took 0s
+2026-11-05 00:32:20 | EVENT vdb Normal TerminatingSubclusterPods Terminating all pods of subcluster primary in main cluster
+2026-11-05 00:32:20 | EVENT vdb Normal LicenseValidationSucceeded 1 valid Vertica license found from secret 'vdb-license'
+2026-11-05 00:32:20 | EVENT vdb Normal ReviveDBStart Starting revive database
+2026-11-05 00:32:20 | EVENT vdb Normal ReviveDBSucceeded Successfully revived database. It took 8s
+2026-11-05 00:32:20 | EVENT vdb Normal ClusterRestartStarted Starting restart of the main cluster
+2026-11-05 00:32:20 | EVENT vdb Normal ClusterRestartSucceeded Successfully restarted the main cluster and it took 27s
+2026-11-05 00:32:20 | EVENT vdb Normal TLSConfigurationStarted Starting to configure TLS for clientServer
+2026-11-05 00:32:20 | EVENT vdb Normal TLSConfigurationSucceeded Successfully set Server tls config
+2026-11-05 00:32:20 | EVENT vdb Normal NMATLSCertRotationStarted Start rotating nma cert from  to vdb-https-tls-k94jl
+2026-11-05 00:32:20 | EVENT vdb Normal NMATLSCertRotationSucceeded Successfully rotated nma cert from  to vdb-https-tls-k94jl
+2026-11-05 00:32:20 | EVENT vdb Normal TLSConfigurationStarted Starting to configure TLS for interNode
+2026-11-05 00:32:20 | EVENT vdb Normal TLSConfigurationSucceeded Successfully set Internode tls config
+2026-11-05 00:32:20 | EVENT vdb Normal TLSConfigurationStarted Starting to configure TLS for httpsNMA
+2026-11-05 00:32:20 | EVENT vdb Normal TLSConfigurationSucceeded Successfully set HTTP tls config
+2026-11-05 00:32:20 | EVENT vdb Normal SubclusterAdded Added new subcluster 'analytics'
+2026-11-05 00:32:20 | EVENT vdb Normal AddNodeStart Starting add database node for pod(s) 'vdb-analytics-0'
+2026-11-05 00:32:20 | EVENT vdb Normal AddNodeStart Starting add database node for pod(s) 'vdb-analytics-1'
+2026-11-05 00:32:20 | EVENT vdb Normal AddNodeSucceeded Successfully added database nodes and it took 19s
+2026-11-05 00:32:20 | EVENT vdb Normal RebalanceShards Successfully called 'rebalance_shards' for 'analytics'
+2026-11-05 00:32:20 | EVENT vdb Normal RemoveNodesStart Starting database remove node for pods 'vdb-analytics-1'
+2026-11-05 00:32:20 | EVENT vdb Warning SuboptimalNodeCount Subcluster 'analytics' has a suboptimal node count.  Consider increasing its size so that the shard to node ratio is 3:1 or less.
+2026-11-05 00:32:20 | EVENT vdb Normal RemoveNodesSucceeded Successfully removed nodes from database and it took 16s
+2026-11-05 00:32:20 | EVENT vdb Normal RemoveSubcluserStart Starting database remove subcluster for subcluster "analytics"
+2026-11-05 00:32:20 | EVENT vdb Normal SubclusterRemoved Removed subcluster "analytics" and it took 19s
+2026-11-05 00:32:20 | OK    Main database ready (3/3) [0s] — pods Ready 3/3 | Vertica nodes UP 3/3
+2026-11-05 00:32:21 | OK    Main database ready (3/3) [0s] — pods Ready 3/3 | Vertica nodes UP 3/3
+2026-11-05 00:32:21 |   STATUS: K8s nodes 4/4 Ready | Vertica pods 3/3 Ready | Vertica nodes 3/3 UP | Database labdb UP
+2026-11-05 00:32:21 |   WHAT: A quick check-up of every layer before any test changes anything.
+2026-11-05 00:32:21 |   HOW: Check the 4 Kubernetes nodes, the VerticaDB operator, its admission webhook and MinIO (S3 communal storage).
+2026-11-05 00:32:21 |   HOW: Check the 3 Vertica pods and their volumes, the Vertica node states, K-safety and the license.
+2026-11-05 00:32:21 |   EXPECT: All green: 4/4 nodes Ready, 3/3 pods Ready, 3/3 Vertica nodes UP, K-safety 1.
+2026-11-05 00:32:21 |   TIME: ~10 s
+2026-11-05 00:32:21 | ==== TEST 1 from 15: T01 [health/REAL] Cluster health check
+2026-11-05 00:32:21 | PASS  Kubernetes: 4/4 nodes Ready
+2026-11-05 00:32:21 | PASS  VerticaDB operator Deployment available
+2026-11-05 00:32:22 | PASS  Admission webhook registered (invalid CR changes are rejected)
+2026-11-05 00:32:22 | PASS  Communal storage (MinIO) ready
+2026-11-05 00:32:22 | PASS  Identity provider (Keycloak) ready
+2026-11-05 00:32:22 | PASS  VerticaDB pods Ready: 3/3
+2026-11-05 00:32:22 | PASS  Persistent volume claims Bound: 3/3
+2026-11-05 00:32:22 | INFO  Container restarts (cumulative, includes earlier failure tests): 3
+2026-11-05 00:32:22 | SQL   [dbadmin@vdb-primary/labdb] SELECT COUNT(*) FROM nodes WHERE node_state='UP';
+2026-11-05 00:32:22 | PASS  Vertica nodes UP: 3/3
+2026-11-05 00:32:22 | SQL   [dbadmin@vdb-primary/labdb] SELECT designed_fault_tolerance||'|'||current_fault_tolerance||'|'||node_count||'|'||node_down_count FROM system;
+2026-11-05 00:32:22 | INFO  K-safety designed=1 current=1 nodes=3 down=0
+2026-11-05 00:32:22 | PASS  Database is K-safe (current fault tolerance 1)
+2026-11-05 00:32:22 | SQL   [dbadmin@vdb-primary/labdb] SELECT COUNT(*) FROM storage_locations WHERE sharing_type='COMMUNAL';
+2026-11-05 00:32:22 | PASS  Eon communal storage location registered
+2026-11-05 00:32:22 | SQL   [dbadmin@vdb-primary/labdb] SELECT GET_COMPLIANCE_STATUS();
+2026-11-05 00:32:22 | INFO  License compliance: Raw Data Size: 0.00B +/- 0.00B  License Size : 0.00B  Utilization  : 0%  Audit Time   : 2000-01-01 00:00:00+00  Compliance Status :    No expiration date for a Perpetual license
+2026-11-05 00:32:22 | INFO  Vertica pods QoS class: Burstable (NMA sidecar defaults may make it Burstable)
+2026-11-05 00:32:23 |   STATUS: K8s nodes 4/4 Ready | Vertica pods 3/3 Ready | Vertica nodes 3/3 UP | Database labdb UP
+2026-11-05 00:32:23 |   WHAT: Builds a realistic retail star schema inside Vertica and checks the data is correct and evenly spread.
+2026-11-05 00:32:23 |   HOW: Generate 10,000 customers, 1,000 products and 5000000 sales rows with set-based SQL (no files needed).
+2026-11-05 00:32:23 |   HOW: Verify the row count and referential integrity (every sale has a customer).
+2026-11-05 00:32:23 |   HOW: Show how the rows are distributed over the 3 nodes (segmentation).
+2026-11-05 00:32:23 |   EXPECT: Exact row count, 0 orphan rows, segmentation skew close to 1.00 (= perfectly even).
+2026-11-05 00:32:23 |   TIME: ~30 s
+2026-11-05 00:32:23 | ==== TEST 2 from 15: T02 [workload/REAL] SQL workload: build and verify a star schema
+2026-11-05 00:32:23 | INFO  Building a star schema (customers 10k, products 1k, sales 5000000 rows) with set-based SQL generation
+2026-11-05 00:32:23 | SQL   [dbadmin@vdb-primary/labdb]  CREATE SCHEMA IF NOT EXISTS lab; DROP TABLE IF EXISTS lab.sales CASCADE; DROP TABLE IF EXISTS lab.customers CASCADE; DROP TABLE IF EXISTS lab.products CASCADE; DROP TABLE IF EXISTS lab.nums CASCADE; CREATE TABLE lab.nums AS   SELECT (ROW_NUMBER() OVER (ORDER BY slice_time) - 1)::INT AS n   FROM (SELECT slice_time FROM (SELECT '2000-01-01 00:00:00'::TIMESTAMP AS t UNION ALL SELECT '2000-01-01 02:46:39'::TIMESTAMP) s         TIMESERIES slice_time AS '1 second' OVER (ORDER BY t)) x; CREATE TABLE lab.customers (customer_id INT NOT NULL PRIMARY KEY, customer_name VARCHAR(40), region VARCHAR(16),   segment VARCHAR(16), signup_date DATE) ORDER BY customer_id UNSEGMENTED ALL NODES; INSERT INTO lab.customers SELECT n, 'customer_'||n,   CASE n%5 WHEN 0 THEN 'NORTH' WHEN 1 THEN 'SOUTH' WHEN 2 THEN 'EAST' WHEN 3 THEN 'WEST' ELSE 'CENTRAL' END,   CASE n%3 WHEN 0 THEN 'CONSUMER' WHEN 1 THEN 'SMB' ELSE 'ENTERPRISE' END, DATE '2020-01-01' + (n % 1500) FROM lab.nums; CREATE TABLE lab.products (product_id INT NOT NULL PRIMARY KEY, category VARCHAR(32), price NUMERIC(10,2))   ORDER BY product_id UNSEGMENTED ALL NODES; INSERT INTO lab.products SELECT n,   CASE n%8 WHEN 0 THEN 'ELECTRONICS' WHEN 1 THEN 'BOOKS' WHEN 2 THEN 'GROCERY' WHEN 3 THEN 'TOYS'            WHEN 4 THEN 'SPORTS' WHEN 5 THEN 'HOME' WHEN 6 THEN 'BEAUTY' ELSE 'AUTO' END,   (10 + (n % 490))::NUMERIC(10,2) FROM lab.nums WHERE n < 1000; CREATE TABLE lab.sales (sale_id INT NOT NULL, sale_ts TIMESTAMP NOT NULL, customer_id INT NOT NULL, product_id INT NOT NULL,   quantity INT, amount NUMERIC(14,2), channel VARCHAR(10))   ORDER BY sale_ts, customer_id SEGMENTED BY HASH(sale_id) ALL NODES   PARTITION BY (YEAR(sale_ts)*100 + MONTH(sale_ts)); INSERT /*+LABEL(lab_load_sales)*/ INTO lab.sales SELECT s.sale_id, s.sale_ts, s.customer_id, s.product_id, s.quantity, (s.quantity * p.price)::NUMERIC(14,2), s.channel FROM (SELECT a.n*10000 + b.n AS sale_id,              TIMESTAMPADD(SECOND, ((a.n*10000 + b.n) * 37) % 63072000, TIMESTAMP '2024-01-01 00:00:00') AS sale_ts,              ABS(HASH(a.n, b.n)) % 10000 AS customer_id,              ABS(HASH(b.n, a.n, 7)) % 1000 AS product_id,              1 + ABS(HASH(a.n + b.n)) % 5 AS quantity,              CASE ABS(HASH(a.n, b.n, 3)) % 3 WHEN 0 THEN 'WEB' WHEN 1 THEN 'STORE' ELSE 'MOBILE' END AS channel       FROM lab.nums a CROSS JOIN lab.nums b       WHERE a.n < CEIL(5000000/10000) AND a.n*10000 + b.n < 5000000) s JOIN lab.products p ON p.product_id = s.product_id; COMMIT; SELECT ANALYZE_STATISTICS('lab.sales');
+2026-11-05 00:32:25 | METRIC load.sales_rows=5000000 rows
+2026-11-05 00:32:25 | METRIC load.elapsed=1 s
+2026-11-05 00:32:25 | METRIC load.throughput=2660989 rows/s INSERT..SELECT incl. join, 3 nodes
+2026-11-05 00:32:25 | SQL   [dbadmin@vdb-primary/labdb] SELECT COUNT(*) FROM lab.sales;
+2026-11-05 00:32:25 | PASS  Row count verified: lab.sales = 5000000
+2026-11-05 00:32:25 | SQL   [dbadmin@vdb-primary/labdb] SELECT COUNT(*) FROM lab.sales s LEFT JOIN lab.customers c ON c.customer_id=s.customer_id WHERE c.customer_id IS NULL;
+2026-11-05 00:32:25 | PASS  Referential integrity: 0 orphan sales rows
+2026-11-05 00:32:25 | SQL   [dbadmin@vdb-primary/labdb] SELECT node_name, SUM(row_count) AS rows_on_node, SUM(used_bytes)//1048576 AS used_mb FROM projection_storage WHERE anchor_table_name='sales' GROUP BY 1 ORDER BY 1;
+2026-11-05 00:32:25 |     node_name     | rows_on_node | used_mb
+------------------+--------------+---------
+ v_labdb_node0001 |      1666297 |      25
+ v_labdb_node0002 |      1666999 |      25
+ v_labdb_node0003 |      1666704 |      25
+(3 rows)
+2026-11-05 00:32:25 | SQL   [dbadmin@vdb-primary/labdb] SELECT ROUND(MAX(r)/NULLIFZERO(MIN(r)),2) FROM (SELECT node_name, SUM(row_count) r FROM projection_storage WHERE anchor_table_name='sales' GROUP BY 1) x;
+2026-11-05 00:32:25 | METRIC load.segmentation_skew=1.000000000000000000 max/min 1.00 = perfectly even
+2026-11-05 00:32:25 | SQL   [dbadmin@vdb-primary/labdb] SELECT channel, COUNT(*) AS orders, SUM(amount) AS revenue FROM lab.sales GROUP BY 1 ORDER BY 3 DESC;
+2026-11-05 00:32:25 |  channel | orders  |    revenue
+---------+---------+---------------
+ WEB     | 1667392 | 1249687712.00
+ STORE   | 1666252 | 1247897530.00
+ MOBILE  | 1666356 | 1247230363.00
+(3 rows)
+2026-11-05 00:32:26 |   STATUS: K8s nodes 4/4 Ready | Vertica pods 3/3 Ready | Vertica nodes 3/3 UP | Database labdb UP
+2026-11-05 00:32:26 |   WHAT: Measures how fast the cluster answers typical analytic questions and loads data.
+2026-11-05 00:32:26 |   HOW: Run 6 analytic queries 3 times each (joins, window functions, percentiles); timings come from Vertica itself.
+2026-11-05 00:32:26 |   HOW: Eon depot effect: clear the local cache, run a query "cold" (reads S3) and then "warm" (local depot).
+2026-11-05 00:32:26 |   HOW: Concurrency: 8 parallel sessions x 5 queries. Bulk load: COPY 500,000 CSV rows.
+2026-11-05 00:32:26 |   EXPECT: All queries succeed, a timing table is printed, 0 errors under concurrency, exactly 500,000 rows loaded.
+2026-11-05 00:32:26 |   WATCH: Numbers are relative: all 3 "servers" share this workstation's CPU and SSD.
+2026-11-05 00:32:26 |   TIME: ~1 min
+2026-11-05 00:32:26 | ==== TEST 3 from 15: T03 [perf/REAL] Query performance, concurrency and bulk load
+2026-11-05 00:32:26 | INFO  Running 6 analytic queries x 3 runs; timings read server-side from v_monitor.query_requests
+2026-11-05 00:32:26 | SQL   [dbadmin@vdb-primary/labdb] SELECT /*+LABEL(lab_q1_r003226_r1)*/ c.region, DATE_TRUNC('month', s.sale_ts)::DATE AS month, SUM(s.amount) revenue, COUNT(*) orders FROM lab.sales s JOIN lab.customers c ON c.customer_id = s.customer_id GROUP BY 1,2 ORDER BY 1,2;
+2026-11-05 00:32:26 | SQL   [dbadmin@vdb-primary/labdb] SELECT /*+LABEL(lab_q1_r003226_r2)*/ c.region, DATE_TRUNC('month', s.sale_ts)::DATE AS month, SUM(s.amount) revenue, COUNT(*) orders FROM lab.sales s JOIN lab.customers c ON c.customer_id = s.customer_id GROUP BY 1,2 ORDER BY 1,2;
+2026-11-05 00:32:26 | SQL   [dbadmin@vdb-primary/labdb] SELECT /*+LABEL(lab_q1_r003226_r3)*/ c.region, DATE_TRUNC('month', s.sale_ts)::DATE AS month, SUM(s.amount) revenue, COUNT(*) orders FROM lab.sales s JOIN lab.customers c ON c.customer_id = s.customer_id GROUP BY 1,2 ORDER BY 1,2;
+2026-11-05 00:32:26 | SQL   [dbadmin@vdb-primary/labdb] SELECT /*+LABEL(lab_q2_r003226_r1)*/ * FROM (SELECT customer_id, SUM(amount) rev, RANK() OVER (ORDER BY SUM(amount) DESC) rnk FROM lab.sales GROUP BY customer_id) t WHERE rnk <= 10;
+2026-11-05 00:32:27 | SQL   [dbadmin@vdb-primary/labdb] SELECT /*+LABEL(lab_q2_r003226_r2)*/ * FROM (SELECT customer_id, SUM(amount) rev, RANK() OVER (ORDER BY SUM(amount) DESC) rnk FROM lab.sales GROUP BY customer_id) t WHERE rnk <= 10;
+2026-11-05 00:32:27 | SQL   [dbadmin@vdb-primary/labdb] SELECT /*+LABEL(lab_q2_r003226_r3)*/ * FROM (SELECT customer_id, SUM(amount) rev, RANK() OVER (ORDER BY SUM(amount) DESC) rnk FROM lab.sales GROUP BY customer_id) t WHERE rnk <= 10;
+2026-11-05 00:32:27 | SQL   [dbadmin@vdb-primary/labdb] SELECT /*+LABEL(lab_q3_r003226_r1)*/ d, daily, AVG(daily) OVER (ORDER BY d ROWS BETWEEN 6 PRECEDING AND CURRENT ROW) ma7 FROM (SELECT sale_ts::DATE d, SUM(amount) daily FROM lab.sales GROUP BY 1) x ORDER BY d;
+2026-11-05 00:32:27 | SQL   [dbadmin@vdb-primary/labdb] SELECT /*+LABEL(lab_q3_r003226_r2)*/ d, daily, AVG(daily) OVER (ORDER BY d ROWS BETWEEN 6 PRECEDING AND CURRENT ROW) ma7 FROM (SELECT sale_ts::DATE d, SUM(amount) daily FROM lab.sales GROUP BY 1) x ORDER BY d;
+2026-11-05 00:32:27 | SQL   [dbadmin@vdb-primary/labdb] SELECT /*+LABEL(lab_q3_r003226_r3)*/ d, daily, AVG(daily) OVER (ORDER BY d ROWS BETWEEN 6 PRECEDING AND CURRENT ROW) ma7 FROM (SELECT sale_ts::DATE d, SUM(amount) daily FROM lab.sales GROUP BY 1) x ORDER BY d;
+2026-11-05 00:32:27 | SQL   [dbadmin@vdb-primary/labdb] SELECT /*+LABEL(lab_q4_r003226_r1)*/ p.category, COUNT(DISTINCT s.customer_id) FROM lab.sales s JOIN lab.products p ON p.product_id = s.product_id GROUP BY 1;
+2026-11-05 00:32:28 | SQL   [dbadmin@vdb-primary/labdb] SELECT /*+LABEL(lab_q4_r003226_r2)*/ p.category, COUNT(DISTINCT s.customer_id) FROM lab.sales s JOIN lab.products p ON p.product_id = s.product_id GROUP BY 1;
+2026-11-05 00:32:28 | SQL   [dbadmin@vdb-primary/labdb] SELECT /*+LABEL(lab_q4_r003226_r3)*/ p.category, COUNT(DISTINCT s.customer_id) FROM lab.sales s JOIN lab.products p ON p.product_id = s.product_id GROUP BY 1;
+2026-11-05 00:32:28 | SQL   [dbadmin@vdb-primary/labdb] SELECT /*+LABEL(lab_q5_r003226_r1)*/ * FROM lab.sales WHERE sale_id = 123457;
+2026-11-05 00:32:28 | SQL   [dbadmin@vdb-primary/labdb] SELECT /*+LABEL(lab_q5_r003226_r2)*/ * FROM lab.sales WHERE sale_id = 123457;
+2026-11-05 00:32:28 | SQL   [dbadmin@vdb-primary/labdb] SELECT /*+LABEL(lab_q5_r003226_r3)*/ * FROM lab.sales WHERE sale_id = 123457;
+2026-11-05 00:32:28 | SQL   [dbadmin@vdb-primary/labdb] SELECT /*+LABEL(lab_q6_r003226_r1)*/ DISTINCT channel, PERCENTILE_CONT(0.9) WITHIN GROUP (ORDER BY amount) OVER (PARTITION BY channel) FROM lab.sales;
+2026-11-05 00:32:29 | SQL   [dbadmin@vdb-primary/labdb] SELECT /*+LABEL(lab_q6_r003226_r2)*/ DISTINCT channel, PERCENTILE_CONT(0.9) WITHIN GROUP (ORDER BY amount) OVER (PARTITION BY channel) FROM lab.sales;
+2026-11-05 00:32:30 | SQL   [dbadmin@vdb-primary/labdb] SELECT /*+LABEL(lab_q6_r003226_r3)*/ DISTINCT channel, PERCENTILE_CONT(0.9) WITHIN GROUP (ORDER BY amount) OVER (PARTITION BY channel) FROM lab.sales;
+2026-11-05 00:32:33 | SQL   [dbadmin@vdb-primary/labdb] SELECT request_label, request_duration_ms FROM v_monitor.query_requests WHERE request_label LIKE 'lab_q%_r003226_r%' AND success ORDER BY 1;
+2026-11-05 00:32:33 | PASS  Analytic query benchmark completed (results in perf.csv)
+2026-11-05 00:32:33 | INFO  Eon depot effect: clear the depot cache, run q1 cold (reads communal S3), then warm
+2026-11-05 00:32:33 | SQL   [dbadmin@vdb-primary/labdb] SELECT CLEAR_DATA_DEPOT();
+2026-11-05 00:32:34 | SQL   [dbadmin@vdb-primary/labdb] SELECT /*+LABEL(lab_q1_r003226_cold)*/ c.region, DATE_TRUNC('month', s.sale_ts)::DATE AS month, SUM(s.amount) revenue, COUNT(*) orders FROM lab.sales s JOIN lab.customers c ON c.customer_id = s.customer_id GROUP BY 1,2 ORDER BY 1,2;
+2026-11-05 00:32:34 | SQL   [dbadmin@vdb-primary/labdb] SELECT /*+LABEL(lab_q1_r003226_warm)*/ c.region, DATE_TRUNC('month', s.sale_ts)::DATE AS month, SUM(s.amount) revenue, COUNT(*) orders FROM lab.sales s JOIN lab.customers c ON c.customer_id = s.customer_id GROUP BY 1,2 ORDER BY 1,2;
+2026-11-05 00:32:36 | SQL   [dbadmin@vdb-primary/labdb] SELECT MAX(request_duration_ms) FROM v_monitor.query_requests WHERE request_label='lab_q1_r003226_cold';
+2026-11-05 00:32:36 | SQL   [dbadmin@vdb-primary/labdb] SELECT MAX(request_duration_ms) FROM v_monitor.query_requests WHERE request_label='lab_q1_r003226_warm';
+2026-11-05 00:32:36 | METRIC depot.q1_cold=115 ms data fetched from communal storage
+2026-11-05 00:32:36 | METRIC depot.q1_warm=102 ms served from local depot
+2026-11-05 00:32:36 | PASS  Depot cold/warm comparison captured (cold 115 ms vs warm 102 ms)
+2026-11-05 00:32:36 | INFO  Concurrency test: 8 parallel sessions x 5 queries (q2) through the load-balanced service
+2026-11-05 00:32:39 | METRIC concurrency.sessions=8 sessions
+2026-11-05 00:32:39 | METRIC concurrency.throughput=17.75 queries/s
+2026-11-05 00:32:39 | METRIC concurrency.errors=0 errors
+2026-11-05 00:32:39 | PASS  Concurrent workload: 40 queries, 0 errors
+2026-11-05 00:32:39 | INFO  Bulk load (ETL) test: generate 500k CSV rows in the client pod and COPY FROM LOCAL
+2026-11-05 00:32:39 | SQL   [dbadmin@vdb-primary/labdb] DROP TABLE IF EXISTS lab.web_events; CREATE TABLE lab.web_events (event_id INT, event_ts TIMESTAMP, customer_id INT, url VARCHAR(64), latency_ms INT) SEGMENTED BY HASH(event_id) ALL NODES;
+2026-11-05 00:32:40 | SQL   [dbadmin@vdb-primary/labdb] SELECT COUNT(*) FROM lab.web_events;
+2026-11-05 00:32:40 | METRIC copy.rows=500000 rows
+2026-11-05 00:32:40 | METRIC copy.throughput=1515151 rows/s COPY FROM LOCAL client->cluster
+2026-11-05 00:32:40 | PASS  COPY loaded 500,000 rows
+2026-11-05 00:32:40 |   STATUS: K8s nodes 4/4 Ready | Vertica pods 3/3 Ready | Vertica nodes 3/3 UP | Database labdb UP
+2026-11-05 00:32:41 |   WHAT: Shows where Vertica keeps its data and proves it is stored durably.
+2026-11-05 00:32:41 |   HOW: List the PersistentVolumeClaims (one local volume per pod for catalog + depot cache).
+2026-11-05 00:32:41 |   HOW: Show Vertica's storage locations and count the data files in the S3 communal bucket (MinIO).
+2026-11-05 00:32:41 |   EXPECT: 3 Bound volumes, a COMMUNAL storage location, data objects present in S3.
+2026-11-05 00:32:41 |   TIME: ~5 s
+2026-11-05 00:32:41 | ==== TEST 4 from 15: T04 [storage/REAL] Persistent storage (local volumes + S3 communal)
+2026-11-05 00:32:41 | PASS  Each Vertica pod has its own Bound PersistentVolume (catalog + depot)
+2026-11-05 00:32:41 | PASS  Local data volume mounted in pod: /dev/nvme0n1p5  232G  115G  105G  53% /home/dbadmin/local-data
+2026-11-05 00:32:41 | SQL   [dbadmin@vdb-primary/labdb] SELECT node_name, location_usage, sharing_type, LEFT(location_path,60) AS path FROM storage_locations ORDER BY node_name, location_usage;
+2026-11-05 00:32:41 |     node_name     | location_usage | sharing_type |                  path
+------------------+----------------+--------------+----------------------------------------
+ v_labdb_node0001 | DATA,TEMP      | NONE         | /data/labdb/v_labdb_node0001_data
+ v_labdb_node0001 | DEPOT          | NONE         | /depot/labdb/v_labdb_node0001_depot
+ v_labdb_node0002 | DATA,TEMP      | NONE         | /data/labdb/v_labdb_node0002_data
+ v_labdb_node0002 | DEPOT          | NONE         | /depot/labdb/v_labdb_node0002_depot
+ v_labdb_node0003 | DATA,TEMP      | NONE         | /data/labdb/v_labdb_node0003_data
+ v_labdb_node0003 | DEPOT          | NONE         | /depot/labdb/v_labdb_node0003_depot
+                  | DATA           | COMMUNAL     | s3://vertica-lab/labdb-20261105001639/
+(7 rows)
+2026-11-05 00:32:41 | SQL   [dbadmin@vdb-primary/labdb] SELECT node_name, (disk_space_used_mb) AS used_mb, (disk_space_free_mb) AS free_mb, storage_usage FROM v_monitor.disk_storage WHERE storage_usage IN ('DEPOT','DATA,TEMP','CATALOG') ORDER BY 1,4;
+2026-11-05 00:32:41 |     node_name     | used_mb | free_mb | storage_usage
+------------------+---------+---------+---------------
+ v_labdb_node0001 |  129800 |  106785 | CATALOG
+ v_labdb_node0001 |  129800 |  106785 | DATA,TEMP
+ v_labdb_node0001 |  129800 |  106785 | DEPOT
+ v_labdb_node0002 |  129800 |  106785 | CATALOG
+ v_labdb_node0002 |  129800 |  106785 | DATA,TEMP
+ v_labdb_node0002 |  129800 |  106785 | DEPOT
+ v_labdb_node0003 |  129800 |  106785 | CATALOG
+ v_labdb_node0003 |  129800 |  106785 | DATA,TEMP
+ v_labdb_node0003 |  129800 |  106785 | DEPOT
+(9 rows)
+2026-11-05 00:32:41 | METRIC communal.objects=473 objects in s3://vertica-lab/labdb-20261105001639
+2026-11-05 00:32:41 | PASS  Communal storage holds 473 objects (data survives loss of every pod)
+2026-11-05 00:32:41 | INFO  Communal usage: 205MiB	473 objects	vertica-lab/labdb-20261105001639
+2026-11-05 00:32:41 | INFO  StorageClass 'standard' (rancher local-path): reclaim/binding = Delete/WaitForFirstConsumer  — production: use replicated/network CSI storage
+2026-11-05 00:32:42 |   STATUS: K8s nodes 4/4 Ready | Vertica pods 3/3 Ready | Vertica nodes 3/3 UP | Database labdb UP
+2026-11-05 00:32:42 |   WHAT: Checks every monitoring channel an operations team would use.
+2026-11-05 00:32:42 |   HOW: kubectl top (metrics-server) for nodes and pods.
+2026-11-05 00:32:42 |   HOW: Operator Prometheus /metrics with a JWT bearer token: the pod's Kubernetes service-account token (machine-to-machine).
+2026-11-05 00:32:42 |   HOW: The same endpoint with no token, a tampered JWT, a JWT for another audience, and another service account's JWT.
+2026-11-05 00:32:42 |   HOW: Vertica server Prometheus endpoint (HTTPS 8443), Vertica system tables (v_monitor), Kubernetes events.
+2026-11-05 00:32:42 |   EXPECT: Metrics with a valid JWT; no token, a tampered JWT or a JWT for another audience are REJECTED.
+2026-11-05 00:32:42 |   WATCH: No Kubernetes events is normal for a stable DB (events are kept 1 h); raw metric samples go to the log only.
+2026-11-05 00:32:42 |   TIME: ~15 s
+2026-11-05 00:32:42 | ==== TEST 5 from 15: T05 [monitoring/REAL] Monitoring and metrics endpoints
+2026-11-05 00:32:42 | PASS  metrics-server: live resource metrics available
+2026-11-05 00:32:42 | CMD   kubectl top nodes
+NAME                        CPU(cores)   CPU(%)   MEMORY(bytes)   MEMORY(%)
+vertica-lab-control-plane   192m         0%       1872Mi          2%
+vertica-lab-worker          185m         0%       476Mi           0%
+vertica-lab-worker2         245m         1%       617Mi           0%
+vertica-lab-worker3         207m         0%       538Mi           0%
+2026-11-05 00:32:42 | CMD   kubectl -n vertica-lab top pods --containers
+POD             NAME     CPU(cores)   MEMORY(bytes)
+vdb-primary-0   nma      1m           14Mi
+vdb-primary-0   server   451m         258Mi
+vdb-primary-1   nma      1m           14Mi
+vdb-primary-1   server   843m         301Mi
+vdb-primary-2   nma      1m           14Mi
+vdb-primary-2   server   738m         246Mi
+vlab-client-0   client   119m         0Mi
+2026-11-05 00:32:42 | PASS  Operator /metrics (HTTPS, RBAC-authorised token) exposes 46 vertica_* samples
+2026-11-05 00:32:42 | INFO  Metric families (11): vertica_cluster_restart_attempted_total, vertica_cluster_restart_failed_total, vertica_cluster_restart_seconds, vertica_nodes_restart_attempted_total, vertica_nodes_restart_failed_total, vertica_nodes_restart_seconds, …  (raw samples: log only)
+2026-11-05 00:32:42 | Operator /metrics raw vertica_* samples:
+2026-11-05 00:32:42 |       vertica_cluster_restart_attempted_total{namespace="vertica-lab",revive_instance_id="",verticadb="vdb"} 1
+2026-11-05 00:32:42 |       vertica_cluster_restart_attempted_total{namespace="vertica-lab",revive_instance_id="<id>",verticadb="vdb"} 0
+2026-11-05 00:32:42 |       vertica_cluster_restart_failed_total{namespace="vertica-lab",revive_instance_id="<id>",verticadb="vdb"} 0
+2026-11-05 00:32:42 |       vertica_cluster_restart_seconds_bucket{namespace="vertica-lab",revive_instance_id="",verticadb="vdb",le="1"} 0
+2026-11-05 00:32:42 |       vertica_cluster_restart_seconds_bucket{namespace="vertica-lab",revive_instance_id="",verticadb="vdb",le="5"} 0
+2026-11-05 00:32:42 |       vertica_cluster_restart_seconds_bucket{namespace="vertica-lab",revive_instance_id="",verticadb="vdb",le="10"} 0
+2026-11-05 00:32:42 |       vertica_cluster_restart_seconds_bucket{namespace="vertica-lab",revive_instance_id="",verticadb="vdb",le="30"} 1
+2026-11-05 00:32:42 |       vertica_cluster_restart_seconds_bucket{namespace="vertica-lab",revive_instance_id="",verticadb="vdb",le="60"} 1
+2026-11-05 00:32:42 |       vertica_cluster_restart_seconds_bucket{namespace="vertica-lab",revive_instance_id="",verticadb="vdb",le="120"} 1
+2026-11-05 00:32:42 |       vertica_cluster_restart_seconds_bucket{namespace="vertica-lab",revive_instance_id="",verticadb="vdb",le="300"} 1
+2026-11-05 00:32:42 |       vertica_cluster_restart_seconds_bucket{namespace="vertica-lab",revive_instance_id="",verticadb="vdb",le="600"} 1
+2026-11-05 00:32:42 |       vertica_cluster_restart_seconds_bucket{namespace="vertica-lab",revive_instance_id="",verticadb="vdb",le="+Inf"} 1
+2026-11-05 00:32:42 |       vertica_cluster_restart_seconds_sum{namespace="vertica-lab",revive_instance_id="",verticadb="vdb"} 27.205456899
+2026-11-05 00:32:42 |       vertica_cluster_restart_seconds_count{namespace="vertica-lab",revive_instance_id="",verticadb="vdb"} 1
+2026-11-05 00:32:42 |       vertica_cluster_restart_seconds_bucket{namespace="vertica-lab",revive_instance_id="<id>",verticadb="vdb",le="1"} 0
+2026-11-05 00:32:42 |       vertica_cluster_restart_seconds_bucket{namespace="vertica-lab",revive_instance_id="<id>",verticadb="vdb",le="5"} 0
+2026-11-05 00:32:42 |       vertica_cluster_restart_seconds_bucket{namespace="vertica-lab",revive_instance_id="<id>",verticadb="vdb",le="10"} 0
+2026-11-05 00:32:42 |       vertica_cluster_restart_seconds_bucket{namespace="vertica-lab",revive_instance_id="<id>",verticadb="vdb",le="30"} 0
+2026-11-05 00:32:42 |       vertica_cluster_restart_seconds_bucket{namespace="vertica-lab",revive_instance_id="<id>",verticadb="vdb",le="60"} 0
+2026-11-05 00:32:42 |       vertica_cluster_restart_seconds_bucket{namespace="vertica-lab",revive_instance_id="<id>",verticadb="vdb",le="120"} 0
+2026-11-05 00:32:42 |       vertica_cluster_restart_seconds_bucket{namespace="vertica-lab",revive_instance_id="<id>",verticadb="vdb",le="300"} 0
+2026-11-05 00:32:42 |       vertica_cluster_restart_seconds_bucket{namespace="vertica-lab",revive_instance_id="<id>",verticadb="vdb",le="600"} 0
+2026-11-05 00:32:42 |       vertica_cluster_restart_seconds_bucket{namespace="vertica-lab",revive_instance_id="<id>",verticadb="vdb",le="+Inf"} 0
+2026-11-05 00:32:42 |       vertica_cluster_restart_seconds_sum{namespace="vertica-lab",revive_instance_id="<id>",verticadb="vdb"} 0
+2026-11-05 00:32:42 |       vertica_cluster_restart_seconds_count{namespace="vertica-lab",revive_instance_id="<id>",verticadb="vdb"} 0
+2026-11-05 00:32:42 |       vertica_nodes_restart_attempted_total{namespace="vertica-lab",revive_instance_id="<id>",verticadb="vdb"} 0
+2026-11-05 00:32:42 |       vertica_nodes_restart_failed_total{namespace="vertica-lab",revive_instance_id="<id>",verticadb="vdb"} 0
+2026-11-05 00:32:42 |       vertica_nodes_restart_seconds_bucket{namespace="vertica-lab",revive_instance_id="<id>",verticadb="vdb",le="1"} 0
+2026-11-05 00:32:42 |       vertica_nodes_restart_seconds_bucket{namespace="vertica-lab",revive_instance_id="<id>",verticadb="vdb",le="5"} 0
+2026-11-05 00:32:42 |       vertica_nodes_restart_seconds_bucket{namespace="vertica-lab",revive_instance_id="<id>",verticadb="vdb",le="10"} 0
+2026-11-05 00:32:42 |       vertica_nodes_restart_seconds_bucket{namespace="vertica-lab",revive_instance_id="<id>",verticadb="vdb",le="30"} 0
+2026-11-05 00:32:42 |       vertica_nodes_restart_seconds_bucket{namespace="vertica-lab",revive_instance_id="<id>",verticadb="vdb",le="60"} 0
+2026-11-05 00:32:42 |       vertica_nodes_restart_seconds_bucket{namespace="vertica-lab",revive_instance_id="<id>",verticadb="vdb",le="120"} 0
+2026-11-05 00:32:42 |       vertica_nodes_restart_seconds_bucket{namespace="vertica-lab",revive_instance_id="<id>",verticadb="vdb",le="300"} 0
+2026-11-05 00:32:42 |       vertica_nodes_restart_seconds_bucket{namespace="vertica-lab",revive_instance_id="<id>",verticadb="vdb",le="600"} 0
+2026-11-05 00:32:42 |       vertica_nodes_restart_seconds_bucket{namespace="vertica-lab",revive_instance_id="<id>",verticadb="vdb",le="+Inf"} 0
+2026-11-05 00:32:42 |       vertica_nodes_restart_seconds_sum{namespace="vertica-lab",revive_instance_id="<id>",verticadb="vdb"} 0
+2026-11-05 00:32:42 |       vertica_nodes_restart_seconds_count{namespace="vertica-lab",revive_instance_id="<id>",verticadb="vdb"} 0
+2026-11-05 00:32:42 |       vertica_running_nodes_count{namespace="vertica-lab",revive_instance_id="<id>",subcluster_oid="",verticadb="vdb"} 1
+2026-11-05 00:32:42 |       vertica_running_nodes_count{namespace="vertica-lab",revive_instance_id="<id>",subcluster_oid="45035996273704988",verticadb="vdb"} 3
+2026-11-05 00:32:42 |       vertica_subclusters_count{namespace="vertica-lab",revive_instance_id="<id>",verticadb="vdb"} 1
+2026-11-05 00:32:42 |       vertica_total_nodes_count{namespace="vertica-lab",revive_instance_id="<id>",subcluster_oid="",verticadb="vdb"} 1
+2026-11-05 00:32:42 |       vertica_total_nodes_count{namespace="vertica-lab",revive_instance_id="<id>",subcluster_oid="45035996273704988",verticadb="vdb"} 3
+2026-11-05 00:32:42 |       vertica_up_nodes_count{namespace="vertica-lab",revive_instance_id="<id>",subcluster_oid="",verticadb="vdb"} 0
+2026-11-05 00:32:42 |       vertica_up_nodes_count{namespace="vertica-lab",revive_instance_id="<id>",subcluster_oid="45035996273704988",verticadb="vdb"} 3
+2026-11-05 00:32:42 |       vertica_upgrade_total{namespace="vertica-lab",revive_instance_id="<id>",verticadb="vdb"} 0
+2026-11-05 00:32:42 | PASS  Anonymous scrape of operator metrics is rejected (HTTP 401)
+2026-11-05 00:32:42 | PASS  The service-account token is a signed JWT (machine-to-machine identity): alg=RS256, iss=https://kubernetes.default.svc.cluster.local, sub=system:serviceaccount:vertica-lab:vlab-client, aud=["https://kubernetes.default.svc.cluster.local"], lifetime 600 s
+2026-11-05 00:32:42 | PASS  JWT with a tampered signature is rejected (HTTP 500: Authentication failed )
+2026-11-05 00:32:42 | PASS  JWT issued for another audience is rejected (HTTP 500: Authentication failed )
+2026-11-05 00:32:43 | INFO  Operator log for the rejected tokens: "invalid bearer token, token audiences [\"
+2026-11-05 00:32:43 | PASS  A valid JWT of another service account is accepted: the chart binds metrics-reader to system:authenticated (documented default)
+2026-11-05 00:32:43 | INFO  Production: bind the metrics-reader role only to the Prometheus service account instead of system:authenticated
+2026-11-05 00:32:43 | PASS  Vertica server Prometheus endpoint https://<pod>:8443/v1/metrics — 634 samples (TLS)
+2026-11-05 00:32:43 | SQL   [dbadmin@vdb-primary/labdb] SELECT node_name, pool_name, memory_inuse_kb, running_query_count FROM v_monitor.resource_pool_status WHERE pool_name IN ('general','lab_bi_pool','lab_etl_pool') ORDER BY 1,2;
+2026-11-05 00:32:43 |     node_name     |  pool_name   | memory_inuse_kb | running_query_count
+------------------+--------------+-----------------+---------------------
+ v_labdb_node0001 | general      |               0 |                   0
+ v_labdb_node0001 | lab_bi_pool  |               0 |                   0
+ v_labdb_node0001 | lab_etl_pool |               0 |                   0
+ v_labdb_node0002 | general      |               0 |                   0
+ v_labdb_node0002 | lab_bi_pool  |               0 |                   0
+ v_labdb_node0002 | lab_etl_pool |               0 |                   0
+ v_labdb_node0003 | general      |               0 |                   0
+ v_labdb_node0003 | lab_bi_pool  |               0 |                   0
+ v_labdb_node0003 | lab_etl_pool |               0 |                   0
+(9 rows)
+2026-11-05 00:32:43 | SQL   [dbadmin@vdb-primary/labdb] SELECT LEFT(request_label,24) label, request_duration_ms ms, LEFT(request,50) request FROM v_monitor.query_requests WHERE request_label LIKE 'lab_%' ORDER BY request_duration_ms DESC LIMIT 5;
+2026-11-05 00:32:43 |        label       |  ms  |                      request
+-------------------+------+----------------------------------------------------
+ lab_load_sales    | 1494 | INSERT /*+LABEL(lab_load_sales)*/ INTO lab.sales S
+ lab_q6_r003226_r3 |  827 | SELECT /*+LABEL(lab_q6_r003226_r3)*/ DISTINCT chan
+ lab_q6_r003226_r2 |  824 | SELECT /*+LABEL(lab_q6_r003226_r2)*/ DISTINCT chan
+ lab_q6_r003226_r1 |  816 | SELECT /*+LABEL(lab_q6_r003226_r1)*/ DISTINCT chan
+ lab_q4_r003226_r3 |  144 | SELECT /*+LABEL(lab_q4_r003226_r3)*/ p.category, C
+(5 rows)
+2026-11-05 00:32:43 | PASS  System-table monitoring (v_monitor.*) queried successfully
+2026-11-05 00:32:43 | PASS  Operator emits Kubernetes events for the VerticaDB (43 events in the last hour)
+2026-11-05 00:32:43 | INFO  VerticaDB status: {"subclusters":[{"name":"primary","upNodeCount":3,"addedToDBCount":3}],"conditions":[{"type":"AutoRestartVertica","status":"True"},{"type":"DBInitialized","status":"True"},{"type":"ClientServerTLSSetupFinished","status":"True"}]}
+2026-11-05 00:32:43 | INFO  Chart Prometheus/Grafana stack disabled (ENABLE_MONITORING_STACK=true to enable)
+2026-11-05 00:32:44 |   STATUS: K8s nodes 4/4 Ready | Vertica pods 3/3 Ready | Vertica nodes 3/3 UP | Database labdb UP
+2026-11-05 00:32:44 |   WHAT: Verifies the security controls: secrets, least privilege, encryption and network isolation.
+2026-11-05 00:32:44 |   HOW: DB password lives only in a Kubernetes Secret; Vertica runs as non-root; a read-only service account is limited.
+2026-11-05 00:32:44 |   HOW: Database users: a read-only user can SELECT but not INSERT; a failed login is audited.
+2026-11-05 00:32:44 |   HOW: TLS: a TLS login is accepted and a plain-text login is REJECTED (TLS missing or not enforced = WARN, not FAIL).
+2026-11-05 00:32:44 |   HOW: Inter-node TLS: data channel (data_channel TLS, VERIFY_CA) and control channel (Spread encryption) between the nodes.
+2026-11-05 00:32:44 |   HOW: NetworkPolicy: an unlabelled "intruder" pod is blocked from the SQL port 5433.
+2026-11-05 00:32:44 |   EXPECT: Every control PASSes; the intruder can connect before the policy and is blocked after it.
+2026-11-05 00:32:44 |   TIME: ~40 s
+2026-11-05 00:32:44 | ==== TEST 6 from 15: T06 [security/REAL] Security controls (secrets, RBAC, TLS, network)
+2026-11-05 00:32:44 | PASS  Superuser password only referenced via Secret (not present in CR / StatefulSet specs)
+2026-11-05 00:32:44 | PASS  Vertica server container runs as non-root (uid 5000)
+2026-11-05 00:32:44 | PASS  RBAC: read-only SA can list pods
+2026-11-05 00:32:44 | PASS  RBAC: read-only SA is denied delete on VerticaDB
+2026-11-05 00:32:44 | PASS  RBAC: read-only SA is denied access to Secrets
+2026-11-05 00:32:44 | SQL   [dbadmin@vdb-primary/labdb] DROP USER IF EXISTS lab_reader CASCADE;
+2026-11-05 00:32:44 | SQL   [dbadmin@vdb-primary/labdb] CREATE USER lab_reader IDENTIFIED BY '********'; GRANT USAGE ON SCHEMA lab TO lab_reader; GRANT SELECT ON lab.sales TO lab_reader;
+2026-11-05 00:32:44 | SQL   [lab_reader@vdb-primary/labdb] SELECT COUNT(*) FROM lab.sales;
+2026-11-05 00:32:44 | PASS  DB RBAC: lab_reader can SELECT (5000000 rows)
+2026-11-05 00:32:44 | SQL   [lab_reader@vdb-primary/labdb] INSERT INTO lab.sales VALUES (-1, NOW(), 0, 0, 1, 1, 'X');
+2026-11-05 00:32:44 | PASS  DB RBAC: INSERT by read-only user is denied
+2026-11-05 00:32:44 | SQL   [lab_reader@vdb-primary/labdb] SELECT 1;
+2026-11-05 00:32:47 | SQL   [dbadmin@vdb-primary/labdb] SELECT COUNT(*) FROM v_monitor.login_failures WHERE user_name='lab_reader';
+2026-11-05 00:32:47 | PASS  Failed login attempt recorded in v_monitor.login_failures (2)
+2026-11-05 00:32:47 | SQL   [dbadmin@vdb-primary/labdb] SELECT s.ssl_state FROM v_monitor.sessions s JOIN v_monitor.current_session c ON s.session_id = c.session_id;
+2026-11-05 00:32:47 | PASS  Client-server TLS: vsql -m require session ssl_state=Server
+2026-11-05 00:32:47 | SQL   [dbadmin@vdb-primary/labdb] SELECT 1;
+2026-11-05 00:32:47 | PASS  Plain-text (non-TLS) remote logins are rejected (TLS enforced by the auth policy)
+2026-11-05 00:32:47 | SQL   [dbadmin@vdb-primary/labdb] SELECT mode||'|'||COALESCE(certificate,'')||'|'||COALESCE(ca_certificate,'') FROM tls_configurations WHERE name='data_channel';
+2026-11-05 00:32:47 | PASS  Data channel between nodes uses TLS: mode VERIFY_CA, certificate data_channel_cert_0 from Kubernetes Secret vdb-internode-tls-f592x
+2026-11-05 00:32:47 | SQL   [dbadmin@vdb-primary/labdb] SELECT current_value FROM configuration_parameters WHERE parameter_name='EncryptSpreadComm' LIMIT 1;
+2026-11-05 00:32:47 | PASS  Control channel (Spread) between nodes is encrypted (EncryptSpreadComm=vertica)
+2026-11-05 00:32:47 | PASS  Operator reports all TLS configurations: clientServer=try_verify, interNode=verify_ca, httpsNMA=try_verify
+2026-11-05 00:32:47 | SQL   [dbadmin@vdb-primary/labdb] SELECT SECURITY_CONFIG_CHECK('NETWORK');
+2026-11-05 00:32:48 |                                                                                                                                                                                                              SECURITY_CONFIG_CHECK
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Spread security details:
+* EncryptSpreadComm = [vertica]
+Spread encryption is enabled
+It is now safe to set/change other security knobs
+
+Data Channel security details:
+ TLS Configuration 'data_channel' TLSMODE is VERIFY_CA
+TLS on the data channel is enabled
+
+Client-Server network security details:
+* TLS Configuration 'server' TLSMODE is TRY_VERIFY
+* TLS Configuration 'server' has a certificate set
+Client-Server TLS is enabled
+
+(1 row)
+2026-11-05 00:32:48 | PASS  HTTPS service (8443) answers over TLS (HTTP 401)
+2026-11-05 00:32:48 | CMD   kubectl apply -f /opt/vertica-k8s-lab/manifests/intruder.yaml
+pod/vlab-intruder created
+2026-11-05 00:32:49 | SQL   [dbadmin@vdb-primary/labdb] SELECT 1;
+2026-11-05 00:32:49 | INFO  Baseline: unlabelled pod can reach 5433 before the policy
+2026-11-05 00:32:49 | CMD   kubectl apply -f /opt/vertica-k8s-lab/manifests/netpol.yaml
+networkpolicy.networking.k8s.io/vlab-restrict-5433 created
+2026-11-05 00:32:57 | SQL   [dbadmin@vdb-primary/labdb] SELECT 1;
+2026-11-05 00:33:17 | SQL   [dbadmin@vdb-primary/labdb] SELECT 1;
+2026-11-05 00:33:17 | PASS  NetworkPolicy: labelled client pod still connects to 5433
+2026-11-05 00:33:17 | PASS  NetworkPolicy: unlabelled pod is blocked from 5433 (zero-trust ingress)
+2026-11-05 00:33:17 | CMD   kubectl -n vertica-lab delete networkpolicy vlab-restrict-5433 --ignore-not-found
+networkpolicy.networking.k8s.io "vlab-restrict-5433" deleted from vertica-lab namespace
+2026-11-05 00:33:17 | CMD   kubectl -n vertica-lab delete pod vlab-intruder --ignore-not-found --wait=false
+pod "vlab-intruder" deleted from vertica-lab namespace
+2026-11-05 00:33:18 | INFO  Temporary NetworkPolicy and intruder pod removed (keeps later tests independent)
+2026-11-05 00:33:18 | INFO  Pod Security Admission labels on namespace: pod-security.kubernetes.io/audit:baseline pod-security.kubernetes.io/warn:baseline
+2026-11-05 00:33:18 |   STATUS: K8s nodes 4/4 Ready | Vertica pods 3/3 Ready | Vertica nodes 3/3 UP | Database labdb UP
+2026-11-05 00:33:18 |   WHAT: An ETL service logs into Vertica with a signed token (JWT) from Keycloak instead of a password.
+2026-11-05 00:33:18 |   HOW: The service gets a token with its client credentials (OAuth 2.0 client_credentials grant): no user, no password.
+2026-11-05 00:33:18 |   HOW: Vertica validates the JWT itself: signature (keys from the JWKS URL), issuer, audience, scope and expiry.
+2026-11-05 00:33:18 |   HOW: Negative tests: tampered signature, forged payload, wrong audience, expired token, password login.
+2026-11-05 00:33:18 |   HOW: Least privilege and audit; then the identity provider rotates its signing key.
+2026-11-05 00:33:18 |   EXPECT: Valid token = session as svc_etl over TLS (method OAuth); every forged/expired/wrong token is REJECTED.
+2026-11-05 00:33:18 |   WATCH: The session user always comes from the token, even if the client asks for 'dbadmin'.
+2026-11-05 00:33:18 |   TIME: ~1 min (includes a 20 s wait for a token to expire)
+2026-11-05 00:33:18 | ==== TEST 7 from 15: T07 [m2m/REAL] Machine-to-machine database login (OAuth 2.0 / JWT)
+2026-11-05 00:33:18 | PASS  Identity provider Keycloak ready (realm vertica-lab, OpenID Connect)
+2026-11-05 00:33:18 | SQL   [dbadmin@vdb-primary/labdb] SELECT COUNT(*) FROM client_auth WHERE auth_name='vlab_oauth_jwt' AND auth_method='OAUTH';
+2026-11-05 00:33:18 | SQL   [dbadmin@vdb-primary/labdb] GRANT USAGE ON SCHEMA lab TO svc_etl; GRANT SELECT ON lab.sales TO svc_etl;
+2026-11-05 00:33:18 | METRIC m2m.token_request=112 ms client_credentials grant
+2026-11-05 00:33:18 | PASS  Service svc_etl obtained a signed JWT from Keycloak with grant_type=client_credentials (no human user, no password)
+2026-11-05 00:33:18 | INFO  JWT claims: alg=RS256 iss=<keycloak>/realms/vertica-lab azp=svc_etl aud="vertica" scope="vertica" lifetime=300 s
+2026-11-05 00:33:19 | METRIC m2m.db_login=132 ms token validated by Vertica (JWT, JWKS keys)
+2026-11-05 00:33:19 | PASS  Vertica accepted the JWT: session user=svc_etl, TLS=Server, authentication method=OAuth
+2026-11-05 00:33:19 | PASS  svc_etl can read what it was granted (lab.sales: 5000000 rows)
+2026-11-05 00:33:19 | PASS  svc_etl cannot write (INSERT denied)
+2026-11-05 00:33:19 | PASS  svc_etl cannot drop tables (DROP denied)
+2026-11-05 00:33:19 | PASS  Identity comes from the token: asking for 'dbadmin' still opens a svc_etl session (no privilege escalation)
+2026-11-05 00:33:19 | PASS  JWT with a tampered signature is rejected
+2026-11-05 00:33:19 | PASS  JWT with a forged payload (azp=dbadmin, original signature) is rejected
+2026-11-05 00:33:20 | PASS  Valid JWT without the 'vertica' audience is rejected (svc_other, aud=null)
+2026-11-05 00:33:20 | PASS  Short-lived JWT (15 s) works while valid
+2026-11-05 00:33:20 | INFO  Waiting 20 s for the 15-second token to expire…
+2026-11-05 00:33:40 | PASS  Expired JWT is rejected
+2026-11-05 00:33:40 | PASS  Password login as svc_etl is impossible (the account has no password; only tokens work)
+2026-11-05 00:33:40 | SQL   [dbadmin@vdb-primary/labdb] SELECT COUNT(*) FROM v_monitor.user_sessions WHERE user_name='svc_etl' AND authentication_method='OAuth';
+2026-11-05 00:33:40 | SQL   [dbadmin@vdb-primary/labdb] SELECT COUNT(*) FROM v_monitor.login_failures WHERE user_name LIKE 'svc_%' AND reason ILIKE '%TOKEN VALIDATION FAILED%';
+2026-11-05 00:33:40 | PASS  Audit: OAuth logins in v_monitor.user_sessions (6), rejected tokens in v_monitor.login_failures (3)
+Created new component with id '<uuid>'
+2026-11-05 00:33:43 | PASS  Signing-key rotation: a token signed with the NEW key (kid 1B7Ug1yX…) is accepted without any change in Vertica (keys fetched from JWKS)
+2026-11-05 00:33:43 | SQL   [dbadmin@vdb-primary/labdb] SELECT user_name, authentication_method, COUNT(*) AS sessions FROM v_monitor.user_sessions WHERE user_name LIKE 'svc_%' GROUP BY 1,2 UNION ALL SELECT user_name, 'rejected: '||LOWER(reason), COUNT(*) FROM v_monitor.login_failures WHERE user_name LIKE 'svc_%' GROUP BY 1,2 ORDER BY 1,2;
+2026-11-05 00:33:43 |  user_name |       authentication_method       | sessions
+-----------+-----------------------------------+----------
+ svc_etl   | OAuth                             |        7
+ svc_etl   | rejected: reject                  |        1
+ svc_etl   | rejected: token validation failed |        1
+ svc_other | rejected: token validation failed |        1
+ svc_short | OAuth                             |        1
+ svc_short | rejected: token validation failed |        1
+(6 rows)
+2026-11-05 00:33:43 |   STATUS: K8s nodes 4/4 Ready | Vertica pods 3/3 Ready | Vertica nodes 3/3 UP | Database labdb UP
+2026-11-05 00:33:43 |   WHAT: Shows that heavy ETL jobs cannot starve interactive BI users.
+2026-11-05 00:33:43 |   HOW: Create 2 resource pools: lab_etl_pool (max 2 concurrent, low priority) and lab_bi_pool (high priority).
+2026-11-05 00:33:43 |   HOW: Fire 12 heavy ETL queries at once while BI queries keep running.
+2026-11-05 00:33:43 |   EXPECT: ETL queries run in lab_etl_pool (extra ones queue), BI queries run in lab_bi_pool.
+2026-11-05 00:33:43 |   TIME: ~1 min
+2026-11-05 00:33:43 | ==== TEST 8 from 15: T08 [isolation/REAL] Workload isolation with resource pools
+2026-11-05 00:33:43 | SQL   [dbadmin@vdb-primary/labdb] DROP USER IF EXISTS lab_etl CASCADE; DROP USER IF EXISTS lab_bi CASCADE;
+2026-11-05 00:33:43 | SQL   [dbadmin@vdb-primary/labdb] DROP RESOURCE POOL lab_etl_pool;
+2026-11-05 00:33:43 | SQL   [dbadmin@vdb-primary/labdb] DROP RESOURCE POOL lab_bi_pool;
+2026-11-05 00:33:44 | SQL   [dbadmin@vdb-primary/labdb]  CREATE RESOURCE POOL lab_etl_pool MEMORYSIZE '0%' MAXMEMORYSIZE '30%' PLANNEDCONCURRENCY 2 MAXCONCURRENCY 2 PRIORITY -10 QUEUETIMEOUT 600; CREATE RESOURCE POOL lab_bi_pool MEMORYSIZE '10%' MAXMEMORYSIZE '40%' PLANNEDCONCURRENCY 4 MAXCONCURRENCY 8 PRIORITY 50 RUNTIMECAP '5 minutes'; CREATE USER lab_etl IDENTIFIED BY '********'; CREATE USER lab_bi IDENTIFIED BY '********'; GRANT USAGE ON RESOURCE POOL lab_etl_pool TO lab_etl; GRANT USAGE ON RESOURCE POOL lab_bi_pool TO lab_bi; ALTER USER lab_etl RESOURCE POOL lab_etl_pool; ALTER USER lab_bi RESOURCE POOL lab_bi_pool; GRANT USAGE ON SCHEMA lab TO lab_etl, lab_bi; GRANT SELECT ON ALL TABLES IN SCHEMA lab TO lab_etl, lab_bi; SELECT name, maxmemorysize, maxconcurrency, priority FROM resource_pools WHERE name LIKE 'lab_%';
+2026-11-05 00:33:44 |      name     | maxmemorysize | maxconcurrency | priority
+--------------+---------------+----------------+----------
+ lab_etl_pool | 30%           |              2 |      -10
+ lab_bi_pool  | 40%           |              8 |       50
+(2 rows)
+2026-11-05 00:33:44 | PASS  Resource pools lab_etl_pool (capped) and lab_bi_pool (high priority) created
+2026-11-05 00:33:44 | SQL   [lab_bi@vdb-primary/labdb] SELECT /*+LABEL(lab_iso_bi_i003344_base)*/ region, COUNT(*) FROM lab.sales s JOIN lab.customers c ON c.customer_id=s.customer_id WHERE s.sale_id % 50 = 1 GROUP BY 1;
+2026-11-05 00:33:44 | SQL   [lab_bi@vdb-primary/labdb] SELECT /*+LABEL(lab_iso_bi_i003344_base)*/ region, COUNT(*) FROM lab.sales s JOIN lab.customers c ON c.customer_id=s.customer_id WHERE s.sale_id % 50 = 1 GROUP BY 1;
+2026-11-05 00:33:44 | SQL   [lab_bi@vdb-primary/labdb] SELECT /*+LABEL(lab_iso_bi_i003344_base)*/ region, COUNT(*) FROM lab.sales s JOIN lab.customers c ON c.customer_id=s.customer_id WHERE s.sale_id % 50 = 1 GROUP BY 1;
+2026-11-05 00:33:44 | INFO  Starting ETL storm: 12 heavy window queries as lab_etl (MAXCONCURRENCY 2 => admission queueing)
+2026-11-05 00:33:48 | SQL   [dbadmin@vdb-primary/labdb] SELECT COUNT(*) FROM v_monitor.resource_queues WHERE pool_name='lab_etl_pool';
+2026-11-05 00:33:48 | SQL   [lab_bi@vdb-primary/labdb] SELECT /*+LABEL(lab_iso_bi_i003344_load)*/ region, COUNT(*) FROM lab.sales s JOIN lab.customers c ON c.customer_id=s.customer_id WHERE s.sale_id % 50 = 1 GROUP BY 1;
+2026-11-05 00:33:49 | SQL   [dbadmin@vdb-primary/labdb] SELECT COUNT(*) FROM v_monitor.resource_queues WHERE pool_name='lab_etl_pool';
+2026-11-05 00:33:49 | SQL   [lab_bi@vdb-primary/labdb] SELECT /*+LABEL(lab_iso_bi_i003344_load)*/ region, COUNT(*) FROM lab.sales s JOIN lab.customers c ON c.customer_id=s.customer_id WHERE s.sale_id % 50 = 1 GROUP BY 1;
+2026-11-05 00:33:49 | SQL   [dbadmin@vdb-primary/labdb] SELECT COUNT(*) FROM v_monitor.resource_queues WHERE pool_name='lab_etl_pool';
+2026-11-05 00:33:49 | SQL   [lab_bi@vdb-primary/labdb] SELECT /*+LABEL(lab_iso_bi_i003344_load)*/ region, COUNT(*) FROM lab.sales s JOIN lab.customers c ON c.customer_id=s.customer_id WHERE s.sale_id % 50 = 1 GROUP BY 1;
+2026-11-05 00:33:49 | SQL   [dbadmin@vdb-primary/labdb] SELECT COUNT(*) FROM v_monitor.resource_queues WHERE pool_name='lab_etl_pool';
+2026-11-05 00:33:49 | SQL   [lab_bi@vdb-primary/labdb] SELECT /*+LABEL(lab_iso_bi_i003344_load)*/ region, COUNT(*) FROM lab.sales s JOIN lab.customers c ON c.customer_id=s.customer_id WHERE s.sale_id % 50 = 1 GROUP BY 1;
+2026-11-05 00:33:49 | SQL   [dbadmin@vdb-primary/labdb] SELECT COUNT(*) FROM v_monitor.resource_queues WHERE pool_name='lab_etl_pool';
+2026-11-05 00:33:49 | SQL   [lab_bi@vdb-primary/labdb] SELECT /*+LABEL(lab_iso_bi_i003344_load)*/ region, COUNT(*) FROM lab.sales s JOIN lab.customers c ON c.customer_id=s.customer_id WHERE s.sale_id % 50 = 1 GROUP BY 1;
+2026-11-05 00:33:50 | SQL   [dbadmin@vdb-primary/labdb] SELECT COUNT(*) FROM v_monitor.resource_queues WHERE pool_name='lab_etl_pool';
+2026-11-05 00:33:50 | SQL   [lab_bi@vdb-primary/labdb] SELECT /*+LABEL(lab_iso_bi_i003344_load)*/ region, COUNT(*) FROM lab.sales s JOIN lab.customers c ON c.customer_id=s.customer_id WHERE s.sale_id % 50 = 1 GROUP BY 1;
+2026-11-05 00:33:50 | SQL   [dbadmin@vdb-primary/labdb] SELECT COUNT(*) FROM v_monitor.resource_queues WHERE pool_name='lab_etl_pool';
+2026-11-05 00:33:50 | SQL   [lab_bi@vdb-primary/labdb] SELECT /*+LABEL(lab_iso_bi_i003344_load)*/ region, COUNT(*) FROM lab.sales s JOIN lab.customers c ON c.customer_id=s.customer_id WHERE s.sale_id % 50 = 1 GROUP BY 1;
+2026-11-05 00:33:50 | SQL   [dbadmin@vdb-primary/labdb] SELECT COUNT(*) FROM v_monitor.resource_queues WHERE pool_name='lab_etl_pool';
+2026-11-05 00:33:50 | SQL   [lab_bi@vdb-primary/labdb] SELECT /*+LABEL(lab_iso_bi_i003344_load)*/ region, COUNT(*) FROM lab.sales s JOIN lab.customers c ON c.customer_id=s.customer_id WHERE s.sale_id % 50 = 1 GROUP BY 1;
+2026-11-05 00:33:50 | SQL   [dbadmin@vdb-primary/labdb] SELECT COUNT(*) FROM v_monitor.resource_queues WHERE pool_name='lab_etl_pool';
+2026-11-05 00:33:50 | SQL   [lab_bi@vdb-primary/labdb] SELECT /*+LABEL(lab_iso_bi_i003344_load)*/ region, COUNT(*) FROM lab.sales s JOIN lab.customers c ON c.customer_id=s.customer_id WHERE s.sale_id % 50 = 1 GROUP BY 1;
+2026-11-05 00:33:51 | SQL   [dbadmin@vdb-primary/labdb] SELECT COUNT(*) FROM v_monitor.resource_queues WHERE pool_name='lab_etl_pool';
+2026-11-05 00:33:51 | SQL   [lab_bi@vdb-primary/labdb] SELECT /*+LABEL(lab_iso_bi_i003344_load)*/ region, COUNT(*) FROM lab.sales s JOIN lab.customers c ON c.customer_id=s.customer_id WHERE s.sale_id % 50 = 1 GROUP BY 1;
+2026-11-05 00:33:53 | METRIC isolation.etl_max_queued=0 queries admission control in lab_etl_pool
+2026-11-05 00:33:53 | INFO  No ETL queueing observed (queries finished quickly)
+2026-11-05 00:33:53 | SQL   [dbadmin@vdb-primary/labdb] SELECT DISTINCT qr.request_label, ra.pool_name FROM v_monitor.query_requests qr JOIN v_monitor.resource_acquisitions ra ON ra.transaction_id=qr.transaction_id AND ra.statement_id=qr.statement_id WHERE qr.request_label LIKE 'lab_iso_%_i003344%';
+2026-11-05 00:33:53 | PASS  BI queries executed in lab_bi_pool
+2026-11-05 00:33:53 | PASS  ETL queries executed in lab_etl_pool
+2026-11-05 00:33:53 | SQL   [dbadmin@vdb-primary/labdb] SELECT ROUND(AVG(request_duration_ms)) FROM v_monitor.query_requests WHERE request_label='lab_iso_bi_i003344_base' AND success;
+2026-11-05 00:33:53 | SQL   [dbadmin@vdb-primary/labdb] SELECT ROUND(AVG(request_duration_ms)) FROM v_monitor.query_requests WHERE request_label='lab_iso_bi_i003344_load' AND success;
+2026-11-05 00:33:53 | METRIC isolation.bi_latency_idle=35 ms
+2026-11-05 00:33:53 | METRIC isolation.bi_latency_during_etl=31 ms same physical CPUs on one workstation
+2026-11-05 00:33:53 | INFO  Subcluster-level isolation (separate compute per workload) is exercised in the 'scaling' group.
+2026-11-05 00:33:54 |   STATUS: K8s nodes 4/4 Ready | Vertica pods 3/3 Ready | Vertica nodes 3/3 UP | Database labdb UP
+2026-11-05 00:33:54 |   WHAT: Proves the operator automatically repairs anything that drifts from the desired state (the VerticaDB CR).
+2026-11-05 00:33:54 |   HOW: Delete an operator-managed Service: the operator recreates it.
+2026-11-05 00:33:54 |   HOW: Scale the StatefulSet from 3 to 2 by hand: the operator restores 3 and the Vertica node rejoins.
+2026-11-05 00:33:54 |   HOW: Delete the operator pod itself: the database keeps running and the new operator resumes.
+2026-11-05 00:33:54 |   HOW: Try invalid CR edits (server-side dry-run): the admission webhook rejects them.
+2026-11-05 00:33:54 |   EXPECT: Every drift is undone automatically and the database stays available.
+2026-11-05 00:33:54 |   TIME: ~2-4 min (each wait is capped at 300s)
+2026-11-05 00:33:54 | ==== TEST 9 from 15: T09 [reconcile/REAL] Operator auto-repair of configuration drift
+2026-11-05 00:33:54 | INFO  Drift #1: deleting operator-managed Service vdb-primary
+2026-11-05 00:33:54 | CMD   kubectl -n vertica-lab delete svc vdb-primary --wait=false
+service "vdb-primary" deleted from vertica-lab namespace
+2026-11-05 00:33:54 | WAIT  Operator recreates Service vdb-primary [0s] service uid absent
+2026-11-05 00:33:57 | OK    Operator recreates Service vdb-primary [3s] — service uid <uuid>
+2026-11-05 00:33:57 | METRIC reconcile.service_recreate=3 s
+2026-11-05 00:33:57 | PASS  Deleted Service recreated by the operator
+2026-11-05 00:33:57 | INFO  Drift #2: manually scaling StatefulSet vdb-primary to 2 replicas (desired = 3 in the CR)
+2026-11-05 00:33:57 | CMD   kubectl -n vertica-lab scale sts vdb-primary --replicas=2
+Warning: volume "podinfo" (Projected) has no sources provided
+statefulset.apps/vdb-primary scaled
+2026-11-05 00:33:57 | WAIT  Operator restores StatefulSet replicas to 3 [0s] sts replicas=2
+2026-11-05 00:34:00 | OK    Operator restores StatefulSet replicas to 3 [3s] — sts replicas=3
+2026-11-05 00:34:00 | METRIC reconcile.sts_drift_fix=3 s
+2026-11-05 00:34:00 | PASS  StatefulSet drift corrected to the CR's desired state
+2026-11-05 00:34:08 | EVENT vdb Normal NodeRestartStarted Starting database restart node of the following pods: vdb-primary-2
+2026-11-05 00:34:08 | WAIT  Database back to 3/3 nodes UP [7s] pods Ready 2/3 | Vertica nodes UP 2/3
+2026-11-05 00:34:18 | WAIT  Database back to 3/3 nodes UP [18s] pods Ready 2/3 | Vertica nodes UP 2/3
+2026-11-05 00:34:28 | EVENT vdb Normal NodeRestartSucceeded Successfully restarted database nodes and it took 21s
+2026-11-05 00:34:28 | WAIT  Database back to 3/3 nodes UP [28s] pods Ready 2/3 | Vertica nodes UP 3/3
+2026-11-05 00:34:38 | OK    Database back to 3/3 nodes UP [38s] — pods Ready 3/3 | Vertica nodes UP 3/3
+2026-11-05 00:34:39 | PASS  All Vertica nodes UP after drift correction
+2026-11-05 00:34:39 | INFO  Drift #3: deleting the operator pod itself (controller outage)
+2026-11-05 00:34:39 | CMD   kubectl -n verticadb-operator delete pod/verticadb-operator-manager-6df8bb5699-zbfks --wait=false
+pod "verticadb-operator-manager-6df8bb5699-zbfks" deleted from verticadb-operator namespace
+2026-11-05 00:34:39 | SQL   [dbadmin@vdb-primary/labdb] SELECT COUNT(*) FROM nodes WHERE node_state='UP';
+2026-11-05 00:34:39 | PASS  Database unaffected while the operator is down (3/3 UP)
+2026-11-05 00:34:39 | WAIT  Operator pod rescheduled and available [0s] operator deployments available 0/1
+2026-11-05 00:34:44 | WAIT  Operator pod rescheduled and available [5s] operator deployments available 0/1
+2026-11-05 00:34:49 | WAIT  Operator pod rescheduled and available [10s] operator deployments available 0/1
+2026-11-05 00:34:54 | OK    Operator pod rescheduled and available [15s] — operator deployments available 1/1
+2026-11-05 00:34:54 | PASS  Operator Deployment self-healed
+2026-11-05 00:34:54 | CMD   kubectl -n vertica-lab delete svc vdb-primary --wait=false
+service "vdb-primary" deleted from vertica-lab namespace
+2026-11-05 00:34:54 | WAIT  New operator instance resumes reconciliation [0s] service uid absent
+2026-11-05 00:34:57 | WAIT  New operator instance resumes reconciliation [3s] service uid absent
+2026-11-05 00:35:01 | OK    New operator instance resumes reconciliation [7s] — service uid <uuid>
+2026-11-05 00:35:01 | PASS  Reconciliation resumed after operator restart
+2026-11-05 00:35:01 | INFO  Admission webhook: attempting invalid changes (server-side dry-run, nothing is persisted)
+The VerticaDB "vdb" is invalid: spec.shardCount: Invalid value: 12: shardCount cannot change after creation.
+2026-11-05 00:35:01 | PASS  Webhook rejects changing immutable shardCount
+The VerticaDB "vdb" is invalid: spec.dbName: Invalid value: "otherdb": dbName cannot change after creation.
+2026-11-05 00:35:01 | PASS  Webhook rejects renaming the database
+The VerticaDB "vdb" is invalid: spec.subclusters: Invalid value: "subcluster hosts size 2": with kSafety 1, the cluster must have at least 3 primary hosts
+2026-11-05 00:35:01 | PASS  Webhook rejects shrinking the K-safe primary subcluster below 3
+2026-11-05 00:35:01 |   STATUS: K8s nodes 4/4 Ready | Vertica pods 3/3 Ready | Vertica nodes 3/3 UP | Database labdb UP
+2026-11-05 00:35:01 |   WHAT: Simulates Vertica crashing on one node (like an out-of-memory kill) while an application keeps querying.
+2026-11-05 00:35:01 |   HOW: Start a client application: 1 query per second for 60s.
+2026-11-05 00:35:01 |   HOW: SIGKILL the Vertica process of node 2 and watch the cluster mark it DOWN.
+2026-11-05 00:35:01 |   HOW: Kubernetes restarts the container, the operator restarts Vertica and the node rejoins.
+2026-11-05 00:35:01 |   EXPECT: Database stays UP on 2 of 3 nodes (K-safety 1), node 2 is back UP, the application recovers by itself.
+2026-11-05 00:35:01 |   WATCH: The client timeline bar: 1 block = 1 second (green = queries OK, red = short outage while the cluster re-forms).
+2026-11-05 00:35:01 |   TIME: ~1-2 min (recovery capped at 300s)
+2026-11-05 00:35:01 | ==== TEST 10 from 15: T10 [selfheal/SIM] Self-healing: Vertica process crash
+2026-11-05 00:35:01 | SQL   [dbadmin@vdb-primary/labdb] SELECT node_name FROM nodes WHERE node_address='<ip>';
+2026-11-05 00:35:01 | INFO  Victim: pod vdb-primary-1 (Vertica node v_labdb_node0002); observer: vdb-primary-0
+2026-11-05 00:35:01 | INFO  Client load generator started: 1 query/s via service vdb-primary for 60s (simulates an application)
+2026-11-05 00:35:06 | INFO  Simulated crash: SIGKILL vertica pid 15316 (node-level pid) killed=1
+2026-11-05 00:35:07 | SQL   [dbadmin@<ip>/labdb] SELECT node_state FROM nodes WHERE node_name='v_labdb_node0002';
+2026-11-05 00:35:27 | WAIT  Cluster detects node failure [20s] v_labdb_node0002 is ? | client probes OK=5 FAIL=3
+2026-11-05 00:35:28 | SQL   [dbadmin@<ip>/labdb] SELECT node_state FROM nodes WHERE node_name='v_labdb_node0002';
+2026-11-05 00:35:48 | WAIT  Cluster detects node failure [41s] v_labdb_node0002 is ? | client probes OK=5 FAIL=5
+2026-11-05 00:35:49 | SQL   [dbadmin@<ip>/labdb] SELECT node_state FROM nodes WHERE node_name='v_labdb_node0002';
+2026-11-05 00:35:52 | WAIT  Cluster detects node failure [45s] v_labdb_node0002 is UP | client probes OK=5 FAIL=5
+2026-11-05 00:35:53 | SQL   [dbadmin@<ip>/labdb] SELECT node_state FROM nodes WHERE node_name='v_labdb_node0002';
+2026-11-05 00:35:53 | OK    Cluster detects node failure [46s] — v_labdb_node0002 is DOWN | client probes OK=5 FAIL=6
+2026-11-05 00:35:53 | METRIC selfheal.process.detect=46 s crash -> node DOWN in catalog
+2026-11-05 00:35:53 | SQL   [dbadmin@<ip>/labdb] SELECT COUNT(*) FROM nodes WHERE node_state='UP';
+2026-11-05 00:35:53 | PASS  Database stayed UP with K-safety while a node was down (2/3 UP)
+2026-11-05 00:35:53 | SQL   [dbadmin@<ip>/labdb] SELECT node_state FROM nodes WHERE node_name='v_labdb_node0002';
+2026-11-05 00:35:53 | WAIT  Operator restarts Vertica on vdb-primary-1 (node rejoins) [0s] v_labdb_node0002 is DOWN | client probes OK=6 FAIL=6
+2026-11-05 00:35:56 | SQL   [dbadmin@<ip>/labdb] SELECT node_state FROM nodes WHERE node_name='v_labdb_node0002';
+2026-11-05 00:35:56 | OK    Operator restarts Vertica on vdb-primary-1 (node rejoins) [3s] — v_labdb_node0002 is UP | client probes OK=9 FAIL=6
+2026-11-05 00:35:56 | METRIC selfheal.process.recovery=49 s crash -> node UP
+2026-11-05 00:35:56 | PASS  Crashed Vertica process automatically restarted and rejoined
+2026-11-05 00:35:56 | INFO  Server container restartCount 0 -> 1 (kubelet restarted the crashed container)
+2026-11-05 00:35:56 | INFO  Recovery finished before the 60s client load window — waiting 5s for the load generator to finish
+2026-11-05 00:36:01 | METRIC selfheal_process.client_queries=13 ok 6 failed or timed out
+2026-11-05 00:36:01 | METRIC selfheal_process.client_availability=23.3 % time-weighted over the 60s window
+2026-11-05 00:36:01 | METRIC selfheal_process.longest_outage=46 s longest continuous period without a successful query
+2026-11-05 00:36:01 | METRIC selfheal_process.max_ok_latency=56 ms
+2026-11-05 00:36:01 | INFO  During a node failure Vertica briefly pauses queries on the surviving nodes while it re-forms the cluster (spread membership change) — that pause is the outage you see.
+2026-11-05 00:36:01 | PASS  Client application recovered automatically after the process crash: longest outage 46s, availability 23.3% over the 60s window
+2026-11-05 00:36:02 |   STATUS: K8s nodes 4/4 Ready | Vertica pods 3/3 Ready | Vertica nodes 3/3 UP | Database labdb UP
+2026-11-05 00:36:02 |   WHAT: Deletes a whole Vertica pod (like an eviction) and checks it comes back with its own data.
+2026-11-05 00:36:02 |   HOW: Record the row count and the pod's volume, then start the client application (1 query/s for 60s).
+2026-11-05 00:36:02 |   HOW: kubectl delete pod: the StatefulSet recreates it, the operator restarts Vertica in it.
+2026-11-05 00:36:02 |   HOW: Check the same PersistentVolume was re-attached and that no rows were lost.
+2026-11-05 00:36:02 |   EXPECT: Pod recreated, node rejoins, same volume, row count unchanged, the application recovers by itself.
+2026-11-05 00:36:02 |   TIME: ~1-2 min (recovery capped at 300s)
+2026-11-05 00:36:02 | ==== TEST 11 from 15: T11 [selfheal/SIM] Self-healing: Vertica pod deleted
+2026-11-05 00:36:02 | SQL   [dbadmin@vdb-primary/labdb] SELECT node_name FROM nodes WHERE node_address='<ip>';
+2026-11-05 00:36:02 | SQL   [dbadmin@vdb-primary/labdb] CREATE TABLE IF NOT EXISTS lab.heartbeat (id IDENTITY, ts TIMESTAMP DEFAULT NOW(), note VARCHAR(40)); INSERT INTO lab.heartbeat (note) VALUES ('before-pod-delete'); COMMIT;
+2026-11-05 00:36:02 | SQL   [dbadmin@vdb-primary/labdb] SELECT COUNT(*) FROM lab.sales;
+2026-11-05 00:36:02 | INFO  Client load generator started: 1 query/s via service vdb-primary for 60s (simulates an application)
+2026-11-05 00:36:07 | INFO  Deleting pod vdb-primary-2 (simulates pod eviction / container runtime failure)
+2026-11-05 00:36:07 | CMD   kubectl -n vertica-lab delete pod vdb-primary-2 --wait=false
+pod "vdb-primary-2" deleted from vertica-lab namespace
+2026-11-05 00:36:07 | WAIT  StatefulSet recreates vdb-primary-2 [0s] pod vdb-primary-2 phase=Pending | client probes OK=5 FAIL=0
+2026-11-05 00:36:09 | OK    StatefulSet recreates vdb-primary-2 [2s] — pod vdb-primary-2 phase=Running | client probes OK=6 FAIL=0
+2026-11-05 00:36:09 | PASS  Pod recreated by StatefulSet controller
+2026-11-05 00:36:09 | SQL   [dbadmin@<ip>/labdb] SELECT node_state FROM nodes WHERE node_name='v_labdb_node0003';
+2026-11-05 00:36:18 | WAIT  Vertica node v_labdb_node0003 rejoins cluster [9s] v_labdb_node0003 is SHUTDOWN | client probes OK=6 FAIL=1
+2026-11-05 00:36:21 | SQL   [dbadmin@<ip>/labdb] SELECT node_state FROM nodes WHERE node_name='v_labdb_node0003';
+2026-11-05 00:36:21 | WAIT  Vertica node v_labdb_node0003 rejoins cluster [12s] v_labdb_node0003 is DOWN | client probes OK=9 FAIL=1
+2026-11-05 00:36:24 | SQL   [dbadmin@<ip>/labdb] SELECT node_state FROM nodes WHERE node_name='v_labdb_node0003';
+2026-11-05 00:36:24 | WAIT  Vertica node v_labdb_node0003 rejoins cluster [15s] v_labdb_node0003 is DOWN | client probes OK=12 FAIL=1
+2026-11-05 00:36:27 | SQL   [dbadmin@<ip>/labdb] SELECT node_state FROM nodes WHERE node_name='v_labdb_node0003';
+2026-11-05 00:36:28 | WAIT  Vertica node v_labdb_node0003 rejoins cluster [19s] v_labdb_node0003 is DOWN | client probes OK=15 FAIL=1
+2026-11-05 00:36:31 | SQL   [dbadmin@<ip>/labdb] SELECT node_state FROM nodes WHERE node_name='v_labdb_node0003';
+2026-11-05 00:36:31 | WAIT  Vertica node v_labdb_node0003 rejoins cluster [22s] v_labdb_node0003 is DOWN | client probes OK=18 FAIL=1
+2026-11-05 00:36:34 | SQL   [dbadmin@<ip>/labdb] SELECT node_state FROM nodes WHERE node_name='v_labdb_node0003';
+2026-11-05 00:36:34 | OK    Vertica node v_labdb_node0003 rejoins cluster [25s] — v_labdb_node0003 is UP | client probes OK=21 FAIL=1
+2026-11-05 00:36:34 | METRIC selfheal.pod.recovery=27 s delete -> node UP
+2026-11-05 00:36:34 | PASS  Deleted pod recovered and Vertica node rejoined automatically
+2026-11-05 00:36:34 | PASS  Same PersistentVolume re-attached (pvc-<uuid>) — catalog/depot persisted
+2026-11-05 00:36:34 | SQL   [dbadmin@vdb-primary/labdb] SELECT COUNT(*) FROM lab.sales;
+2026-11-05 00:36:34 | PASS  No data loss: lab.sales still 5000000 rows
+2026-11-05 00:36:34 | INFO  Recovery finished before the 60s client load window — waiting 28s for the load generator to finish
+2026-11-05 00:37:02 | METRIC selfheal_pod.client_queries=48 ok 1 failed or timed out
+2026-11-05 00:37:02 | METRIC selfheal_pod.client_availability=85.2 % time-weighted over the 61s window
+2026-11-05 00:37:02 | METRIC selfheal_pod.longest_outage=9 s longest continuous period without a successful query
+2026-11-05 00:37:02 | METRIC selfheal_pod.max_ok_latency=511 ms
+2026-11-05 00:37:02 | PASS  Client application recovered automatically after the pod deletion: longest outage 9s, availability 85.2% over the 60s window
+2026-11-05 00:37:02 |   STATUS: K8s nodes 4/4 Ready | Vertica pods 3/3 Ready | Vertica nodes 3/3 UP | Database labdb UP
+2026-11-05 00:37:02 |   WHAT: Freezes an entire worker "server" (docker pause): kubelet, container runtime and Vertica all stop responding.
+2026-11-05 00:37:02 |   HOW: Start the client application, then freeze a worker that hosts one Vertica pod for 60s.
+2026-11-05 00:37:02 |   HOW: While it is frozen: write and read data through the 2 surviving nodes.
+2026-11-05 00:37:02 |   HOW: Unfreeze it: the node returns and the operator brings Vertica back to 3/3 UP.
+2026-11-05 00:37:02 |   EXPECT: Reads AND writes keep working with 1 node lost; full recovery and application recovery without manual action.
+2026-11-05 00:37:02 |   TIME: ~2-3 min (recovery capped at 300s)
+2026-11-05 00:37:02 | ==== TEST 12 from 15: T12 [nodefail/SIM] Node failure: a worker server freezes
+2026-11-05 00:37:03 | SQL   [dbadmin@vdb-primary/labdb] SELECT node_name FROM nodes WHERE node_address='<ip>';
+2026-11-05 00:37:03 | INFO  Victim worker: vertica-lab-worker3 (hosts vdb-primary-2 = v_labdb_node0003). Failure mode: 'docker pause' freezes the whole node
+2026-11-05 00:37:03 | INFO  (kubelet, containerd and Vertica stop responding — like a hung server or a network partition) for 60s
+2026-11-05 00:37:03 | INFO  Client load generator started: 1 query/s via service vdb-primary for 105s (simulates an application)
+2026-11-05 00:37:08 | CMD   docker pause vertica-lab-worker3
+vertica-lab-worker3
+2026-11-05 00:37:08 | SQL   [dbadmin@<ip>/labdb] SELECT node_state FROM nodes WHERE node_name='v_labdb_node0003';
+2026-11-05 00:37:28 | WAIT  Vertica detects loss of v_labdb_node0003 [20s] v_labdb_node0003 is ? | client probes OK=5 FAIL=2
+2026-11-05 00:37:30 | SQL   [dbadmin@<ip>/labdb] SELECT node_state FROM nodes WHERE node_name='v_labdb_node0003';
+2026-11-05 00:37:50 | WAIT  Vertica detects loss of v_labdb_node0003 [42s] v_labdb_node0003 is ? | client probes OK=5 FAIL=4
+2026-11-05 00:37:52 | SQL   [dbadmin@<ip>/labdb] SELECT node_state FROM nodes WHERE node_name='v_labdb_node0003';
+2026-11-05 00:37:53 | WAIT  Vertica detects loss of v_labdb_node0003 [45s] v_labdb_node0003 is UP | client probes OK=5 FAIL=5
+2026-11-05 00:37:55 | SQL   [dbadmin@<ip>/labdb] SELECT node_state FROM nodes WHERE node_name='v_labdb_node0003';
+2026-11-05 00:37:55 | OK    Vertica detects loss of v_labdb_node0003 [47s] — v_labdb_node0003 is DOWN | client probes OK=7 FAIL=5
+2026-11-05 00:37:55 | METRIC nodefail.vertica_detect=47 s
+2026-11-05 00:37:55 | OK    Kubernetes marks vertica-lab-worker3 NotReady [0s] — node vertica-lab-worker3 Ready=Unknown | client probes OK=7 FAIL=5
+2026-11-05 00:37:55 | METRIC nodefail.k8s_detect=47 s node-monitor-grace-period
+2026-11-05 00:37:55 | SQL   [dbadmin@<ip>/labdb] INSERT INTO lab.heartbeat (note) VALUES ('during-node-failure'); COMMIT;
+2026-11-05 00:37:55 | SQL   [dbadmin@<ip>/labdb] SELECT COUNT(*) FROM lab.heartbeat WHERE note='during-node-failure';
+2026-11-05 00:37:55 | PASS  Reads AND writes succeed with 1 of 3 nodes failed (K-safety 1)
+2026-11-05 00:37:55 | WAIT  Keeping vertica-lab-worker3 failed [0s] node stays failed, 13s left | client probes OK=7 FAIL=5
+2026-11-05 00:37:58 | WAIT  Keeping vertica-lab-worker3 failed [3s] node stays failed, 10s left | client probes OK=10 FAIL=5
+2026-11-05 00:38:01 | WAIT  Keeping vertica-lab-worker3 failed [6s] node stays failed, 7s left | client probes OK=13 FAIL=5
+2026-11-05 00:38:04 | WAIT  Keeping vertica-lab-worker3 failed [9s] node stays failed, 4s left | client probes OK=16 FAIL=5
+2026-11-05 00:38:08 | OK    Keeping vertica-lab-worker3 failed [13s] — node stays failed, 0s left | client probes OK=19 FAIL=5
+2026-11-05 00:38:08 | CMD   docker unpause vertica-lab-worker3
+vertica-lab-worker3
+2026-11-05 00:38:08 | OK    Worker vertica-lab-worker3 Ready again [0s] — node vertica-lab-worker3 Ready=True
+2026-11-05 00:38:08 | SQL   [dbadmin@<ip>/labdb] SELECT COUNT(*) FROM nodes WHERE node_state='UP';
+2026-11-05 00:38:08 | WAIT  Operator restores v_labdb_node0003 (3/3 UP) [0s] Vertica nodes UP 2/3 | client probes OK=19 FAIL=5
+2026-11-05 00:38:11 | SQL   [dbadmin@<ip>/labdb] SELECT COUNT(*) FROM nodes WHERE node_state='UP';
+2026-11-05 00:38:11 | WAIT  Operator restores v_labdb_node0003 (3/3 UP) [3s] Vertica nodes UP 2/3 | client probes OK=22 FAIL=5
+2026-11-05 00:38:14 | SQL   [dbadmin@<ip>/labdb] SELECT COUNT(*) FROM nodes WHERE node_state='UP';
+2026-11-05 00:38:14 | WAIT  Operator restores v_labdb_node0003 (3/3 UP) [6s] Vertica nodes UP 2/3 | client probes OK=25 FAIL=5
+2026-11-05 00:38:17 | SQL   [dbadmin@<ip>/labdb] SELECT COUNT(*) FROM nodes WHERE node_state='UP';
+2026-11-05 00:38:17 | WAIT  Operator restores v_labdb_node0003 (3/3 UP) [9s] Vertica nodes UP 2/3 | client probes OK=28 FAIL=5
+2026-11-05 00:38:20 | SQL   [dbadmin@<ip>/labdb] SELECT COUNT(*) FROM nodes WHERE node_state='UP';
+2026-11-05 00:38:20 | WAIT  Operator restores v_labdb_node0003 (3/3 UP) [12s] Vertica nodes UP 2/3 | client probes OK=29 FAIL=7
+2026-11-05 00:38:23 | SQL   [dbadmin@<ip>/labdb] SELECT COUNT(*) FROM nodes WHERE node_state='UP';
+2026-11-05 00:38:23 | OK    Operator restores v_labdb_node0003 (3/3 UP) [15s] — Vertica nodes UP 3/3 | client probes OK=31 FAIL=8
+2026-11-05 00:38:23 | METRIC nodefail.recovery_after_restore=15 s node back -> 3/3 UP
+2026-11-05 00:38:23 | PASS  Node failure fully recovered without manual intervention
+2026-11-05 00:38:23 | INFO  Recovery finished before the 60s client load window — waiting 25s for the load generator to finish
+2026-11-05 00:38:48 | METRIC nodefail.client_queries=54 ok 8 failed or timed out
+2026-11-05 00:38:48 | METRIC nodefail.client_availability=53.8 % time-weighted over the 106s window
+2026-11-05 00:38:48 | METRIC nodefail.longest_outage=45 s longest continuous period without a successful query
+2026-11-05 00:38:48 | METRIC nodefail.max_ok_latency=52 ms
+2026-11-05 00:38:48 | PASS  Client application recovered automatically after the node freeze: longest outage 45s, availability 53.8% over the 60s window
+2026-11-05 00:38:48 | INFO  Why availability is lower here: the Service keeps sending some new connections to the frozen pod until Kubernetes marks the node NotReady (~40-50s); each such query waits for its 8s timeout. Production clients add connection load balancing + retry.
+2026-11-05 00:38:48 | INFO  Production note: a permanently lost host needs pod rescheduling to another machine, which requires network-attached storage (see PROD-ONLY list).
+2026-11-05 00:38:48 |   STATUS: K8s nodes 4/4 Ready | Vertica pods 3/3 Ready | Vertica nodes 3/3 UP | Database labdb UP
+2026-11-05 00:38:48 |   WHAT: A full backup and disaster-recovery drill driven by the operator.
+2026-11-05 00:38:48 |   HOW: Save a restore point (VerticaRestorePointsQuery), then simulate incidents: unwanted inserts and a DROP TABLE.
+2026-11-05 00:38:48 |   HOW: Logical backup: export a table to Parquet in S3 and read it back (auto-skipped on the -minimal image, which has no Parquet export package).
+2026-11-05 00:38:48 |   HOW: Restore only the dropped table from the restore point.
+2026-11-05 00:38:48 |   HOW: DISASTER: delete the whole database deployment (pods + volumes) and revive it from S3 at the restore point.
+2026-11-05 00:38:48 |   EXPECT: Dropped table restored; after the revive the data matches the restore point exactly.
+2026-11-05 00:38:48 |   WATCH: The database is intentionally OFFLINE for a few minutes during the revive step.
+2026-11-05 00:38:48 |   TIME: ~5-10 min
+2026-11-05 00:38:48 | ==== TEST 13 from 15: T13 [backup/REAL] Backup, restore and disaster recovery
+2026-11-05 00:38:48 | SQL   [dbadmin@vdb-primary/labdb]  DROP TABLE IF EXISTS lab.bk_orders CASCADE; DROP TABLE IF EXISTS lab.bk_audit CASCADE; DROP TABLE IF EXISTS lab.bk_orders_ext CASCADE; CREATE TABLE lab.bk_orders (order_id INT, phase VARCHAR(10), amount NUMERIC(12,2)); INSERT INTO lab.bk_orders SELECT n, 'before', (n % 500)::NUMERIC(12,2) FROM lab.nums; CREATE TABLE lab.bk_audit (id INT, event VARCHAR(40)); INSERT INTO lab.bk_audit SELECT n, 'audit-event-'||n FROM lab.nums WHERE n < 100; COMMIT; SELECT (SELECT COUNT(*) FROM lab.bk_orders) AS bk_orders, (SELECT COUNT(*) FROM lab.bk_audit) AS bk_audit;
+2026-11-05 00:38:49 | NOTICE 4185:  Nothing was dropped
+ OUTPUT
+--------
+  10000
+(1 row)
+
+ OUTPUT
+--------
+    100
+(1 row)
+
+ bk_orders | bk_audit
+-----------+----------
+     10000 |      100
+(1 row)
+2026-11-05 00:38:49 | SQL   [dbadmin@vdb-primary/labdb] SELECT COUNT(*) FROM lab.sales;
+2026-11-05 00:38:49 | CMD   kubectl apply -f /opt/vertica-k8s-lab/manifests/vrpq-save.yaml
+verticarestorepointsquery.vertica.com/vlab-save-003848 created
+2026-11-05 00:38:49 | WAIT  Operator saves restore point to archive lab_archive [0s] state: Querying
+2026-11-05 00:38:54 | EVENT vlab-save-003848 Normal CreateArchiveStart Starting create archive
+2026-11-05 00:38:54 | EVENT vlab-save-003848 Normal SaveRestorePointStart Starting save restore point
+2026-11-05 00:38:54 | EVENT vlab-save-003848 Normal SaveRestorePointSucceeded Successfully saved restore point to archive lab_archive. It took 0s
+2026-11-05 00:38:54 | OK    Operator saves restore point to archive lab_archive [5s] — state: Query successful
+2026-11-05 00:38:54 | METRIC backup.save_restore_point=5 s
+2026-11-05 00:38:54 | PASS  Restore point saved via VerticaRestorePointsQuery (SaveRestorePoint)
+2026-11-05 00:38:54 | CMD   kubectl apply -f /opt/vertica-k8s-lab/manifests/vrpq-show.yaml
+verticarestorepointsquery.vertica.com/vlab-show-003848 created
+2026-11-05 00:38:54 | WAIT  List restore points [0s] state: Querying
+2026-11-05 00:38:59 | EVENT vlab-show-003848 Normal ShowRestorePointsStarted Starting show restore points
+2026-11-05 00:38:59 | EVENT vlab-show-003848 Normal ShowRestorePointsSucceeded Successfully queried restore points in 2s
+2026-11-05 00:38:59 | OK    List restore points [5s] — state: Query successful
+2026-11-05 00:38:59 |       index=1 id=<uuid> ts=2026-11-04 22:38:49.786807
+2026-11-05 00:38:59 |       index=2 id=<uuid> ts=2026-11-04 22:27:52.298767
+2026-11-05 00:38:59 | SQL   [dbadmin@vdb-primary/labdb] INSERT INTO lab.bk_orders SELECT n+100000, 'after', 1 FROM lab.nums WHERE n < 5000; COMMIT; DROP TABLE lab.bk_audit CASCADE;
+2026-11-05 00:39:00 | INFO  Incident simulated: 5,000 unwanted rows inserted into bk_orders and table bk_audit DROPPED
+2026-11-05 00:39:00 | SQL   [dbadmin@vdb-primary/labdb] SELECT COUNT(*) FROM user_functions WHERE function_name ILIKE 'ParquetExport';
+2026-11-05 00:39:00 | SKIP  Logical backup (EXPORT TO PARQUET) skipped: the ParquetExport package is not part of the '-minimal' Vertica image (use the full image to enable it)
+2026-11-05 00:39:00 | CMD   kubectl apply -f /opt/vertica-k8s-lab/manifests/vrpq-restore.yaml
+verticarestorepointsquery.vertica.com/vlab-restore-003848 created
+2026-11-05 00:39:00 | WAIT  Operator restores dropped table lab.bk_audit from restore point [0s] state: Querying
+2026-11-05 00:39:05 | EVENT vlab-restore-003848 Normal RestoreFromArchiveStart Starting restore from archive
+2026-11-05 00:39:05 | EVENT vlab-restore-003848 Normal RestoreFromArchiveSucceeded Successfully restored from archive lab_archive. It took 2s
+2026-11-05 00:39:05 | OK    Operator restores dropped table lab.bk_audit from restore point [5s] — state: Query successful
+2026-11-05 00:39:05 | SQL   [dbadmin@vdb-primary/labdb] SELECT COUNT(*) FROM lab.bk_audit;
+2026-11-05 00:39:05 | METRIC backup.table_restore=5 s
+2026-11-05 00:39:05 | PASS  Object-level restore: dropped table recovered with 100 rows
+2026-11-05 00:39:05 | INFO  DISASTER RECOVERY: shut down + DELETE VerticaDB 'vdb' (pods + PVCs), then revive from communal storage at restore point #1
+2026-11-05 00:39:05 | INFO  Preserving TLS secrets for revive (docs: the catalog expects the original certificates): httpsNMATLS=vdb-https-tls-k94jl clientServerTLS=vdb-clientserver-tls-dthtr interNodeTLS=vdb-internode-tls-f592x
+2026-11-05 00:39:05 | CMD   kubectl -n vertica-lab patch vdb vdb --type=merge -p {"spec":{"shutdown":true}}
+verticadb.vertica.com/vdb patched
+2026-11-05 00:39:05 | WAIT  Graceful shutdown (operator drains + stops Vertica, removes pods) [0s] 3 pods remaining
+2026-11-05 00:39:10 | WAIT  Graceful shutdown (operator drains + stops Vertica, removes pods) [5s] 3 pods remaining
+2026-11-05 00:39:15 | OK    Graceful shutdown (operator drains + stops Vertica, removes pods) [10s] — 0 pods remaining
+2026-11-05 00:39:15 | CMD   kubectl -n vertica-lab delete vdb vdb --wait=true --timeout=600s
+verticadb.vertica.com "vdb" deleted from vertica-lab namespace
+2026-11-05 00:39:15 | WAIT  Operator deletes the database PVCs [0s] 2 PVCs remaining
+2026-11-05 00:39:21 | OK    Operator deletes the database PVCs [5s] — 0 PVCs remaining
+2026-11-05 00:39:21 | PASS  Database deployment destroyed: no pods, no local volumes — only communal storage remains
+2026-11-05 00:39:21 | CMD   kubectl apply -f /opt/vertica-k8s-lab/manifests/vdb-revive.yaml
+verticadb.vertica.com/vdb created
+2026-11-05 00:39:21 | EVENT vdb Normal LicenseValidationSucceeded 1 valid Vertica license found from secret 'vdb-license'
+2026-11-05 00:39:21 | EVENT vdb Normal NodeRestartStarted Starting database restart node of the following pods: vdb-primary-2
+2026-11-05 00:39:21 | EVENT vdb Normal NodeRestartSucceeded Successfully restarted database nodes and it took 28s
+2026-11-05 00:39:21 | EVENT vdb Normal ArchiveExists Attempted to create an archive that already exists
+2026-11-05 00:39:21 | EVENT vdb Normal StopDBStart Starting stop database on main cluster
+2026-11-05 00:39:21 | EVENT vdb Normal StopDBSucceeded Successfully stopped the database on main cluster.  It took 5s
+2026-11-05 00:39:21 | EVENT vdb Normal TerminatingSubclusterPods Terminating all pods of subcluster primary in main cluster
+2026-11-05 00:39:21 | WAIT  Revive from restore point (initPolicy: Revive) [0s] pods Ready 0/3 | Vertica nodes UP -/3
+2026-11-05 00:39:31 | WAIT  Revive from restore point (initPolicy: Revive) [10s] pods Ready 0/3 | Vertica nodes UP -/3
+2026-11-05 00:39:41 | EVENT vdb Normal LicenseValidationSucceeded 1 valid Vertica license found from secret 'vdb-license'
+2026-11-05 00:39:41 | EVENT vdb Normal ReviveDBStart Starting revive database
+2026-11-05 00:39:41 | WAIT  Revive from restore point (initPolicy: Revive) [20s] pods Ready 0/3 | Vertica nodes UP -/3
+2026-11-05 00:39:52 | EVENT vdb Normal ReviveDBSucceeded Successfully revived database. It took 9s
+2026-11-05 00:39:52 | EVENT vdb Normal ClusterRestartStarted Starting restart of the main cluster
+2026-11-05 00:39:52 | WAIT  Revive from restore point (initPolicy: Revive) [31s] pods Ready 0/3 | Vertica nodes UP -/3
+2026-11-05 00:40:02 | WAIT  Revive from restore point (initPolicy: Revive) [41s] pods Ready 0/3 | Vertica nodes UP -/3
+2026-11-05 00:40:12 | WAIT  Revive from restore point (initPolicy: Revive) [51s] pods Ready 0/3 | Vertica nodes UP -/3
+2026-11-05 00:40:23 | EVENT vdb Normal ClusterRestartSucceeded Successfully restarted the main cluster and it took 27s
+2026-11-05 00:40:23 | EVENT vdb Normal TLSConfigurationStarted Starting to configure TLS for clientServer
+2026-11-05 00:40:23 | EVENT vdb Normal TLSConfigurationSucceeded Successfully set Server tls config
+2026-11-05 00:40:23 | EVENT vdb Normal NMATLSCertRotationStarted Start rotating nma cert from  to vdb-https-tls-k94jl
+2026-11-05 00:40:23 | EVENT vdb Normal NMATLSCertRotationSucceeded Successfully rotated nma cert from  to vdb-https-tls-k94jl
+2026-11-05 00:40:23 | EVENT vdb Normal TLSConfigurationStarted Starting to configure TLS for interNode
+2026-11-05 00:40:23 | EVENT vdb Normal TLSConfigurationSucceeded Successfully set Internode tls config
+2026-11-05 00:40:23 | EVENT vdb Normal TLSConfigurationStarted Starting to configure TLS for httpsNMA
+2026-11-05 00:40:23 | EVENT vdb Normal TLSConfigurationSucceeded Successfully set HTTP tls config
+2026-11-05 00:40:23 | OK    Revive from restore point (initPolicy: Revive) [61s] — pods Ready 3/3 | Vertica nodes UP 3/3
+2026-11-05 00:40:23 | METRIC backup.revive_rto=62 s revive -> 3/3 UP
+2026-11-05 00:40:23 | METRIC backup.total_outage=78 s shutdown+delete+revive
+2026-11-05 00:40:23 | PASS  Database revived from communal storage on brand-new pods/volumes
+2026-11-05 00:40:23 | SQL   [dbadmin@vdb-primary/labdb] SELECT COUNT(*) FROM lab.bk_orders;
+2026-11-05 00:40:23 | SQL   [dbadmin@vdb-primary/labdb] SELECT COUNT(*) FROM lab.sales;
+2026-11-05 00:40:23 | PASS  Point-in-time restore: bk_orders = 10,000 (the 5,000 post-backup rows are gone)
+2026-11-05 00:40:23 | PASS  Fact table intact after DR: lab.sales = 5000000
+2026-11-05 00:40:23 | CMD   kubectl -n vertica-lab delete vrpq vlab-save-003848 vlab-show-003848 vlab-restore-003848 --ignore-not-found --wait=false
+verticarestorepointsquery.vertica.com "vlab-save-003848" deleted from vertica-lab namespace
+verticarestorepointsquery.vertica.com "vlab-show-003848" deleted from vertica-lab namespace
+verticarestorepointsquery.vertica.com "vlab-restore-003848" deleted from vertica-lab namespace
+2026-11-05 00:40:24 |   STATUS: K8s nodes 4/4 Ready | Vertica pods 3/3 Ready | Vertica nodes 3/3 UP | Database labdb UP
+2026-11-05 00:40:24 |   WHAT: Adds and removes compute online: a secondary "analytics" subcluster with its own service.
+2026-11-05 00:40:24 |   HOW: Add subcluster 'analytics' with 1 node, then grow it to 2 nodes.
+2026-11-05 00:40:24 |   HOW: Route sessions through each subcluster's service and run heavy queries on analytics only.
+2026-11-05 00:40:24 |   HOW: Scale analytics back 2 -> 1 and remove it.
+2026-11-05 00:40:24 |   EXPECT: Every scaling step completes online and sessions land on the right subcluster.
+2026-11-05 00:40:24 |   TIME: ~5-10 min
+2026-11-05 00:40:24 | ==== TEST 14 from 15: T14 [scaling/SIM] Elastic scaling: add and remove compute online
+2026-11-05 00:40:24 | INFO  Licensed node capacity 5: scaling the main HA database by adding a secondary subcluster
+2026-11-05 00:40:24 | INFO  SCALE-OUT: add secondary subcluster 'analytics' (size 1)
+2026-11-05 00:40:24 | CMD   kubectl -n vertica-lab patch vdb vdb --type=json -p [{"op":"add","path":"/spec/subclusters/-","value":{"name":"analytics","type":"secondary","size":1,"serviceType":"NodePort","resources":{"requests":{"cpu":"1","memory":"3Gi"},"limits":{"cpu":"1","memory":"3Gi"}},"affinity":{"podAntiAffinity":{"preferredDuringSchedulingIgnoredDuringExecution":[{"weight":100,"podAffinityTerm":{"labelSelector":{"matchLabels":{"vertica.com/subcluster-selector-name":"vdb-analytics"}},"topologyKey":"kubernetes.io/hostname"}}]}},"clientNodePort":30434}}]
+verticadb.vertica.com/vdb patched
+2026-11-05 00:40:24 | SQL   [dbadmin@vdb-primary/labdb] SELECT COUNT(*) FROM v_catalog.subclusters s JOIN nodes n ON n.node_name=s.node_name WHERE s.subcluster_name='analytics' AND n.node_state='UP';
+2026-11-05 00:40:24 | SQL   [dbadmin@vdb-primary/labdb] SELECT COUNT(*) FROM nodes;
+2026-11-05 00:40:25 | WAIT  Subcluster analytics 1 node UP [0s] subcluster analytics UP 0/1 | catalog nodes 3/4
+2026-11-05 00:40:30 | SQL   [dbadmin@vdb-primary/labdb] SELECT COUNT(*) FROM v_catalog.subclusters s JOIN nodes n ON n.node_name=s.node_name WHERE s.subcluster_name='analytics' AND n.node_state='UP';
+2026-11-05 00:40:30 | SQL   [dbadmin@vdb-primary/labdb] SELECT COUNT(*) FROM nodes;
+2026-11-05 00:40:30 | WAIT  Subcluster analytics 1 node UP [6s] subcluster analytics UP 0/1 | catalog nodes 3/4
+2026-11-05 00:40:35 | SQL   [dbadmin@vdb-primary/labdb] SELECT COUNT(*) FROM v_catalog.subclusters s JOIN nodes n ON n.node_name=s.node_name WHERE s.subcluster_name='analytics' AND n.node_state='UP';
+2026-11-05 00:40:35 | SQL   [dbadmin@vdb-primary/labdb] SELECT COUNT(*) FROM nodes;
+2026-11-05 00:40:35 | WAIT  Subcluster analytics 1 node UP [11s] subcluster analytics UP 0/1 | catalog nodes 3/4
+2026-11-05 00:40:40 | SQL   [dbadmin@vdb-primary/labdb] SELECT COUNT(*) FROM v_catalog.subclusters s JOIN nodes n ON n.node_name=s.node_name WHERE s.subcluster_name='analytics' AND n.node_state='UP';
+2026-11-05 00:40:40 | SQL   [dbadmin@vdb-primary/labdb] SELECT COUNT(*) FROM nodes;
+2026-11-05 00:40:41 | EVENT vdb Normal SubclusterAdded Added new subcluster 'analytics'
+2026-11-05 00:40:41 | EVENT vdb Warning SuboptimalNodeCount Subcluster 'analytics' has a suboptimal node count.  Consider increasing its size so that the shard to node ratio is 3:1 or less.
+2026-11-05 00:40:41 | EVENT vdb Normal AddNodeStart Starting add database node for pod(s) 'vdb-analytics-0'
+2026-11-05 00:40:41 | WAIT  Subcluster analytics 1 node UP [17s] subcluster analytics UP 0/1 | catalog nodes 4/4
+2026-11-05 00:40:46 | SQL   [dbadmin@vdb-primary/labdb] SELECT COUNT(*) FROM v_catalog.subclusters s JOIN nodes n ON n.node_name=s.node_name WHERE s.subcluster_name='analytics' AND n.node_state='UP';
+2026-11-05 00:40:46 | SQL   [dbadmin@vdb-primary/labdb] SELECT COUNT(*) FROM nodes;
+2026-11-05 00:40:46 | WAIT  Subcluster analytics 1 node UP [22s] subcluster analytics UP 0/1 | catalog nodes 4/4
+2026-11-05 00:40:51 | SQL   [dbadmin@vdb-primary/labdb] SELECT COUNT(*) FROM v_catalog.subclusters s JOIN nodes n ON n.node_name=s.node_name WHERE s.subcluster_name='analytics' AND n.node_state='UP';
+2026-11-05 00:40:51 | SQL   [dbadmin@vdb-primary/labdb] SELECT COUNT(*) FROM nodes;
+2026-11-05 00:40:51 | OK    Subcluster analytics 1 node UP [27s] — subcluster analytics UP 1/1 | catalog nodes 4/4
+2026-11-05 00:40:51 | METRIC scaling.add_subcluster=27 s
+2026-11-05 00:40:51 | PASS  Scale-out: new subcluster added online
+2026-11-05 00:40:52 | INFO  SCALE-OUT: analytics size 1 -> 2
+2026-11-05 00:40:52 | CMD   kubectl -n vertica-lab patch vdb vdb --type=json -p [{"op":"replace","path":"/spec/subclusters/1/size","value":2}]
+verticadb.vertica.com/vdb patched
+2026-11-05 00:40:52 | SQL   [dbadmin@vdb-primary/labdb] SELECT COUNT(*) FROM v_catalog.subclusters s JOIN nodes n ON n.node_name=s.node_name WHERE s.subcluster_name='analytics' AND n.node_state='UP';
+2026-11-05 00:40:52 | SQL   [dbadmin@vdb-primary/labdb] SELECT COUNT(*) FROM nodes;
+2026-11-05 00:40:52 | WAIT  Subcluster analytics 2 nodes UP [0s] subcluster analytics UP 1/2 | catalog nodes 4/5
+2026-11-05 00:40:57 | SQL   [dbadmin@vdb-primary/labdb] SELECT COUNT(*) FROM v_catalog.subclusters s JOIN nodes n ON n.node_name=s.node_name WHERE s.subcluster_name='analytics' AND n.node_state='UP';
+2026-11-05 00:40:57 | SQL   [dbadmin@vdb-primary/labdb] SELECT COUNT(*) FROM nodes;
+2026-11-05 00:40:57 | EVENT vdb Normal AddNodeSucceeded Successfully added database nodes and it took 19s
+2026-11-05 00:40:57 | EVENT vdb Normal RebalanceShards Successfully called 'rebalance_shards' for 'analytics'
+2026-11-05 00:40:57 | WAIT  Subcluster analytics 2 nodes UP [5s] subcluster analytics UP 1/2 | catalog nodes 4/5
+2026-11-05 00:41:02 | SQL   [dbadmin@vdb-primary/labdb] SELECT COUNT(*) FROM v_catalog.subclusters s JOIN nodes n ON n.node_name=s.node_name WHERE s.subcluster_name='analytics' AND n.node_state='UP';
+2026-11-05 00:41:02 | SQL   [dbadmin@vdb-primary/labdb] SELECT COUNT(*) FROM nodes;
+2026-11-05 00:41:03 | WAIT  Subcluster analytics 2 nodes UP [11s] subcluster analytics UP 1/2 | catalog nodes 4/5
+2026-11-05 00:41:08 | SQL   [dbadmin@vdb-primary/labdb] SELECT COUNT(*) FROM v_catalog.subclusters s JOIN nodes n ON n.node_name=s.node_name WHERE s.subcluster_name='analytics' AND n.node_state='UP';
+2026-11-05 00:41:08 | SQL   [dbadmin@vdb-primary/labdb] SELECT COUNT(*) FROM nodes;
+2026-11-05 00:41:08 | EVENT vdb Normal AddNodeStart Starting add database node for pod(s) 'vdb-analytics-1'
+2026-11-05 00:41:08 | WAIT  Subcluster analytics 2 nodes UP [16s] subcluster analytics UP 1/2 | catalog nodes 5/5
+2026-11-05 00:41:13 | SQL   [dbadmin@vdb-primary/labdb] SELECT COUNT(*) FROM v_catalog.subclusters s JOIN nodes n ON n.node_name=s.node_name WHERE s.subcluster_name='analytics' AND n.node_state='UP';
+2026-11-05 00:41:13 | SQL   [dbadmin@vdb-primary/labdb] SELECT COUNT(*) FROM nodes;
+2026-11-05 00:41:14 | WAIT  Subcluster analytics 2 nodes UP [21s] subcluster analytics UP 1/2 | catalog nodes 5/5
+2026-11-05 00:41:19 | SQL   [dbadmin@vdb-primary/labdb] SELECT COUNT(*) FROM v_catalog.subclusters s JOIN nodes n ON n.node_name=s.node_name WHERE s.subcluster_name='analytics' AND n.node_state='UP';
+2026-11-05 00:41:19 | SQL   [dbadmin@vdb-primary/labdb] SELECT COUNT(*) FROM nodes;
+2026-11-05 00:41:19 | WAIT  Subcluster analytics 2 nodes UP [27s] subcluster analytics UP 1/2 | catalog nodes 5/5
+2026-11-05 00:41:24 | SQL   [dbadmin@vdb-primary/labdb] SELECT COUNT(*) FROM v_catalog.subclusters s JOIN nodes n ON n.node_name=s.node_name WHERE s.subcluster_name='analytics' AND n.node_state='UP';
+2026-11-05 00:41:24 | SQL   [dbadmin@vdb-primary/labdb] SELECT COUNT(*) FROM nodes;
+2026-11-05 00:41:25 | OK    Subcluster analytics 2 nodes UP [32s] — subcluster analytics UP 2/2 | catalog nodes 5/5
+2026-11-05 00:41:25 | METRIC scaling.scale_out_1_to_2=33 s
+2026-11-05 00:41:25 | PASS  Scale-out: analytics grew to 2 nodes
+2026-11-05 00:41:25 | SQL   [dbadmin@vdb-primary/labdb] SELECT subcluster_name, is_primary, COUNT(*) nodes FROM v_catalog.subclusters GROUP BY 1,2 ORDER BY 2 DESC;
+2026-11-05 00:41:25 |  subcluster_name | is_primary | nodes
+-----------------+------------+-------
+ primary         | t          |     3
+ analytics       | f          |     2
+(2 rows)
+2026-11-05 00:41:25 | SQL   [dbadmin@vdb-analytics/labdb] SELECT s.subcluster_name FROM v_monitor.current_session c JOIN v_catalog.subclusters s ON s.node_name=c.node_name;
+2026-11-05 00:41:25 | SQL   [dbadmin@vdb-analytics/labdb] SELECT s.subcluster_name FROM v_monitor.current_session c JOIN v_catalog.subclusters s ON s.node_name=c.node_name;
+2026-11-05 00:41:25 | SQL   [dbadmin@vdb-analytics/labdb] SELECT s.subcluster_name FROM v_monitor.current_session c JOIN v_catalog.subclusters s ON s.node_name=c.node_name;
+2026-11-05 00:41:25 | SQL   [dbadmin@vdb-analytics/labdb] SELECT s.subcluster_name FROM v_monitor.current_session c JOIN v_catalog.subclusters s ON s.node_name=c.node_name;
+2026-11-05 00:41:25 | SQL   [dbadmin@vdb-analytics/labdb] SELECT s.subcluster_name FROM v_monitor.current_session c JOIN v_catalog.subclusters s ON s.node_name=c.node_name;
+2026-11-05 00:41:25 | SQL   [dbadmin@vdb-analytics/labdb] SELECT s.subcluster_name FROM v_monitor.current_session c JOIN v_catalog.subclusters s ON s.node_name=c.node_name;
+2026-11-05 00:41:25 | PASS  Workload isolation: every session via service vdb-analytics lands on the analytics subcluster
+2026-11-05 00:41:25 | SQL   [dbadmin@vdb-primary/labdb] SELECT s.subcluster_name FROM v_monitor.current_session c JOIN v_catalog.subclusters s ON s.node_name=c.node_name;
+2026-11-05 00:41:26 | SQL   [dbadmin@vdb-primary/labdb] SELECT s.subcluster_name FROM v_monitor.current_session c JOIN v_catalog.subclusters s ON s.node_name=c.node_name;
+2026-11-05 00:41:26 | SQL   [dbadmin@vdb-primary/labdb] SELECT s.subcluster_name FROM v_monitor.current_session c JOIN v_catalog.subclusters s ON s.node_name=c.node_name;
+2026-11-05 00:41:26 | SQL   [dbadmin@vdb-primary/labdb] SELECT s.subcluster_name FROM v_monitor.current_session c JOIN v_catalog.subclusters s ON s.node_name=c.node_name;
+2026-11-05 00:41:26 | PASS  Workload isolation: sessions via vdb-primary stay on the primary subcluster
+2026-11-05 00:41:26 | SQL   [dbadmin@vdb-primary/labdb] SELECT /*+LABEL(lab_sc_s004126_idle)*/ COUNT(*) FROM lab.sales WHERE sale_id % 97 = 1;
+2026-11-05 00:41:26 | SQL   [dbadmin@vdb-primary/labdb] SELECT /*+LABEL(lab_sc_s004126_idle)*/ COUNT(*) FROM lab.sales WHERE sale_id % 97 = 1;
+2026-11-05 00:41:26 | SQL   [dbadmin@vdb-primary/labdb] SELECT /*+LABEL(lab_sc_s004126_idle)*/ COUNT(*) FROM lab.sales WHERE sale_id % 97 = 1;
+2026-11-05 00:41:29 | SQL   [dbadmin@vdb-primary/labdb] SELECT /*+LABEL(lab_sc_s004126_busy)*/ COUNT(*) FROM lab.sales WHERE sale_id % 97 = 1;
+2026-11-05 00:41:29 | SQL   [dbadmin@vdb-primary/labdb] SELECT /*+LABEL(lab_sc_s004126_busy)*/ COUNT(*) FROM lab.sales WHERE sale_id % 97 = 1;
+2026-11-05 00:41:30 | SQL   [dbadmin@vdb-primary/labdb] SELECT /*+LABEL(lab_sc_s004126_busy)*/ COUNT(*) FROM lab.sales WHERE sale_id % 97 = 1;
+2026-11-05 00:41:37 | SQL   [dbadmin@vdb-primary/labdb] SELECT ROUND(AVG(request_duration_ms)) FROM v_monitor.query_requests WHERE request_label='lab_sc_s004126_idle';
+2026-11-05 00:41:37 | METRIC isolation.primary_latency_idle=21 ms
+2026-11-05 00:41:37 | SQL   [dbadmin@vdb-primary/labdb] SELECT ROUND(AVG(request_duration_ms)) FROM v_monitor.query_requests WHERE request_label='lab_sc_s004126_busy';
+2026-11-05 00:41:37 | METRIC isolation.primary_latency_analytics_busy=17 ms shared workstation CPU
+2026-11-05 00:41:37 | INFO  SCALE-IN: analytics 2 -> 1
+2026-11-05 00:41:37 | CMD   kubectl -n vertica-lab patch vdb vdb --type=json -p [{"op":"replace","path":"/spec/subclusters/1/size","value":1}]
+verticadb.vertica.com/vdb patched
+2026-11-05 00:41:37 | SQL   [dbadmin@vdb-primary/labdb] SELECT COUNT(*) FROM v_catalog.subclusters s JOIN nodes n ON n.node_name=s.node_name WHERE s.subcluster_name='analytics' AND n.node_state='UP';
+2026-11-05 00:41:37 | SQL   [dbadmin@vdb-primary/labdb] SELECT COUNT(*) FROM nodes;
+2026-11-05 00:41:37 | WAIT  Subcluster analytics back to 1 node [0s] subcluster analytics UP 2/1 | catalog nodes 5/4
+2026-11-05 00:41:42 | SQL   [dbadmin@vdb-primary/labdb] SELECT COUNT(*) FROM v_catalog.subclusters s JOIN nodes n ON n.node_name=s.node_name WHERE s.subcluster_name='analytics' AND n.node_state='UP';
+2026-11-05 00:41:42 | SQL   [dbadmin@vdb-primary/labdb] SELECT COUNT(*) FROM nodes;
+2026-11-05 00:41:43 | WAIT  Subcluster analytics back to 1 node [6s] subcluster analytics UP 2/1 | catalog nodes 5/4
+2026-11-05 00:41:48 | SQL   [dbadmin@vdb-primary/labdb] SELECT COUNT(*) FROM v_catalog.subclusters s JOIN nodes n ON n.node_name=s.node_name WHERE s.subcluster_name='analytics' AND n.node_state='UP';
+2026-11-05 00:41:55 | SQL   [dbadmin@vdb-primary/labdb] SELECT COUNT(*) FROM nodes;
+2026-11-05 00:41:55 | WAIT  Subcluster analytics back to 1 node [18s] subcluster analytics UP 2/1 | catalog nodes 4/4
+2026-11-05 00:42:00 | SQL   [dbadmin@vdb-primary/labdb] SELECT COUNT(*) FROM v_catalog.subclusters s JOIN nodes n ON n.node_name=s.node_name WHERE s.subcluster_name='analytics' AND n.node_state='UP';
+2026-11-05 00:42:00 | SQL   [dbadmin@vdb-primary/labdb] SELECT COUNT(*) FROM nodes;
+2026-11-05 00:42:00 | OK    Subcluster analytics back to 1 node [23s] — subcluster analytics UP 1/1 | catalog nodes 4/4
+2026-11-05 00:42:00 | METRIC scaling.scale_in_2_to_1=23 s
+2026-11-05 00:42:00 | PASS  Scale-in: node drained and removed from catalog
+2026-11-05 00:42:00 | INFO  SCALE-IN: remove subcluster analytics
+2026-11-05 00:42:00 | CMD   kubectl -n vertica-lab patch vdb vdb --type=json -p [{"op":"remove","path":"/spec/subclusters/1"}]
+verticadb.vertica.com/vdb patched
+2026-11-05 00:42:00 | SQL   [dbadmin@vdb-primary/labdb] SELECT COUNT(*) FROM v_catalog.subclusters s JOIN nodes n ON n.node_name=s.node_name WHERE s.subcluster_name='analytics' AND n.node_state='UP';
+2026-11-05 00:42:00 | SQL   [dbadmin@vdb-primary/labdb] SELECT COUNT(*) FROM nodes;
+2026-11-05 00:42:01 | WAIT  Subcluster analytics removed [1s] subcluster analytics UP 1/0 | catalog nodes 4/3
+2026-11-05 00:42:06 | SQL   [dbadmin@vdb-primary/labdb] SELECT COUNT(*) FROM v_catalog.subclusters s JOIN nodes n ON n.node_name=s.node_name WHERE s.subcluster_name='analytics' AND n.node_state='UP';
+2026-11-05 00:42:06 | SQL   [dbadmin@vdb-primary/labdb] SELECT COUNT(*) FROM nodes;
+2026-11-05 00:42:06 | WAIT  Subcluster analytics removed [6s] subcluster analytics UP 1/0 | catalog nodes 4/3
+2026-11-05 00:42:11 | SQL   [dbadmin@vdb-primary/labdb] SELECT COUNT(*) FROM v_catalog.subclusters s JOIN nodes n ON n.node_name=s.node_name WHERE s.subcluster_name='analytics' AND n.node_state='UP';
+2026-11-05 00:42:19 | SQL   [dbadmin@vdb-primary/labdb] SELECT COUNT(*) FROM nodes;
+2026-11-05 00:42:19 | WAIT  Subcluster analytics removed [19s] subcluster analytics UP 1/0 | catalog nodes 3/3
+2026-11-05 00:42:24 | SQL   [dbadmin@vdb-primary/labdb] SELECT COUNT(*) FROM v_catalog.subclusters s JOIN nodes n ON n.node_name=s.node_name WHERE s.subcluster_name='analytics' AND n.node_state='UP';
+2026-11-05 00:42:24 | SQL   [dbadmin@vdb-primary/labdb] SELECT COUNT(*) FROM nodes;
+2026-11-05 00:42:24 | OK    Subcluster analytics removed [24s] — subcluster analytics UP 0/0 | catalog nodes 3/3
+2026-11-05 00:42:24 | METRIC scaling.remove_subcluster=24 s
+2026-11-05 00:42:24 | PASS  Subcluster removed; database back to 3 node(s)
+2026-11-05 00:42:24 | INFO  Removing the analytics subcluster's leftover volumes (2 PVCs; the operator keeps PVCs on scale-in by design)
+persistentvolumeclaim "local-data-vdb-analytics-0" deleted from vertica-lab namespace
+persistentvolumeclaim "local-data-vdb-analytics-1" deleted from vertica-lab namespace
+2026-11-05 00:42:24 |   STATUS: K8s nodes 4/4 Ready | Vertica pods 3/3 Ready | Vertica nodes 3/3 UP | Database labdb UP
+2026-11-05 00:42:24 |   WHAT: Confirms the lab is left healthy and the host is untouched.
+2026-11-05 00:42:24 |   HOW: Repeat the health check.
+2026-11-05 00:42:24 |   HOW: Compare the host Vertica 26.3 (version, processes, ports, config) with the snapshot from the start.
+2026-11-05 00:42:24 |   HOW: Check no kind node is left paused and none will auto-start after a reboot.
+2026-11-05 00:42:24 |   EXPECT: Healthy cluster, host Vertica identical, restart policy = no.
+2026-11-05 00:42:24 |   TIME: ~15 s
+2026-11-05 00:42:24 | ==== TEST 15 from 15: T15 [final/REAL] Final health and host-safety check
+2026-11-05 00:42:25 | PASS  Kubernetes: 4/4 nodes Ready
+2026-11-05 00:42:25 | PASS  VerticaDB operator Deployment available
+2026-11-05 00:42:25 | PASS  Admission webhook registered (invalid CR changes are rejected)
+2026-11-05 00:42:25 | PASS  Communal storage (MinIO) ready
+2026-11-05 00:42:25 | PASS  Identity provider (Keycloak) ready
+2026-11-05 00:42:25 | PASS  VerticaDB pods Ready: 3/3
+2026-11-05 00:42:25 | PASS  Persistent volume claims Bound: 3/3
+2026-11-05 00:42:25 | INFO  Container restarts (cumulative, includes earlier failure tests): 3
+2026-11-05 00:42:25 | SQL   [dbadmin@vdb-primary/labdb] SELECT COUNT(*) FROM nodes WHERE node_state='UP';
+2026-11-05 00:42:25 | PASS  Vertica nodes UP: 3/3
+2026-11-05 00:42:25 | SQL   [dbadmin@vdb-primary/labdb] SELECT designed_fault_tolerance||'|'||current_fault_tolerance||'|'||node_count||'|'||node_down_count FROM system;
+2026-11-05 00:42:25 | INFO  K-safety designed=1 current=1 nodes=3 down=0
+2026-11-05 00:42:25 | PASS  Database is K-safe (current fault tolerance 1)
+2026-11-05 00:42:25 | SQL   [dbadmin@vdb-primary/labdb] SELECT COUNT(*) FROM storage_locations WHERE sharing_type='COMMUNAL';
+2026-11-05 00:42:25 | PASS  Eon communal storage location registered
+2026-11-05 00:42:25 | SQL   [dbadmin@vdb-primary/labdb] SELECT GET_COMPLIANCE_STATUS();
+2026-11-05 00:42:25 | INFO  License compliance: Raw Data Size: 0.00B +/- 0.00B  License Size : 0.00B  Utilization  : 0%  Audit Time   : 2000-01-01 00:00:00+00  Compliance Status :    No expiration date for a Perpetual license
+2026-11-05 00:42:25 | INFO  Vertica pods QoS class: Burstable (NMA sidecar defaults may make it Burstable)
+2026-11-05 00:42:26 | PASS  Host Vertica untouched: version, processes, ports, config mtime, dbadmin and unit identical to run start
+2026-11-05 00:42:26 | PASS  All kind node containers running (none left paused/stopped)
+2026-11-05 00:42:26 | PASS  Reboot safety: kind node restart policy = no
+2026-11-05 00:42:26 | PASS  No temporary test objects left behind
+2026-11-05 00:42:26 | ==== TEST SUMMARY (2026-11-05 00:42:26 | host workstation | Vertica image opentext/vertica-k8s:26.2.0-4-minimal | chart 26.2.2)
+2026-11-05 00:42:26 |       P01  production  PROD  N/A  Permanent host loss with pod rescheduling onto another physical machine
+2026-11-05 00:42:26 |       P02  production  PROD  N/A  Kubernetes control-plane high availability
+2026-11-05 00:42:26 |       P03  production  PROD  N/A  Zone / rack fault domains
+2026-11-05 00:42:26 |       P04  production  PROD  N/A  Real network partitions, NIC/switch failures and latency between hosts
+2026-11-05 00:42:26 |       P05  production  PROD  N/A  Production performance and capacity benchmarks
+2026-11-05 00:42:26 |       P06  production  PROD  N/A  Durable communal storage
+2026-11-05 00:42:26 |       P07  production  PROD  N/A  Off-site / cross-region disaster recovery
+2026-11-05 00:42:26 |       P08  production  PROD  N/A  Metrics-driven autoscaling (VerticaAutoscaler + Prometheus/KEDA) and K8s node autoscaling
+2026-11-05 00:42:26 |       P09  production  PROD  N/A  Online rolling upgrade between Vertica releases (upgradePolicy: Online)
+2026-11-05 00:42:26 |       P10  production  PROD  N/A  Enterprise identity & secrets (LDAP/Kerberos, AWS Secrets Manager / Google Secret Manager, CA-signed certificates, etcd encryption at rest)
+2026-11-05 00:42:26 |       P11  production  PROD  N/A  Load balancers / ingress with real external IPs and DNS
+2026-11-05 00:42:26 |       P12  production  PROD  N/A  Workload identity for communal storage (IRSA on Amazon EKS)
+2026-11-05 00:42:26 |       P13  production  PROD  N/A  Production identity provider for OAuth 2.0 / JWT (Okta, OTDS, or Keycloak in production mode)
+2026-11-05 00:42:26 | Capabilities that REQUIRE a real multi-node production cluster (not testable on one workstation):
+2026-11-05 00:42:26 |       P01  Permanent host loss with pod rescheduling onto another physical machine — Local-path PVs pin each Vertica pod to one node; production needs network/replicated CSI storage (EBS, Ceph, Portworx, vSAN) so the StatefulSet pod can restart elsewhere.
+2026-11-05 00:42:26 |       P02  Kubernetes control-plane high availability — kind here has 1 control-plane; production uses 3+ control-plane nodes / managed K8s with an etcd quorum.
+2026-11-05 00:42:26 |       P03  Zone / rack fault domains — Needs real failure domains with topologySpreadConstraints / zone labels; all 'nodes' here share one workstation.
+2026-11-05 00:42:26 |       P04  Real network partitions, NIC/switch failures and latency between hosts — Simulated only by freezing a node container; real Spread heartbeat behaviour needs separate hosts.
+2026-11-05 00:42:26 |       P05  Production performance and capacity benchmarks — All pods share the same CPU, RAM and SSD; numbers are relative, not sizing guidance.
+2026-11-05 00:42:26 |       P06  Durable communal storage — A single MinIO pod on one disk is not durable; production uses S3 or an erasure-coded/replicated on-prem object store with TLS.
+2026-11-05 00:42:26 |       P07  Off-site / cross-region disaster recovery — Requires a second cluster (VerticaReplicator CR or replicated object storage).
+2026-11-05 00:42:26 |       P08  Metrics-driven autoscaling (VerticaAutoscaler + Prometheus/KEDA) and K8s node autoscaling — Needs a cluster autoscaler / cloud capacity; here scaling is triggered by CR changes.
+2026-11-05 00:42:26 |       P09  Online rolling upgrade between Vertica releases (upgradePolicy: Online) — Needs a second, newer image version and production-sized subclusters.
+2026-11-05 00:42:26 |       P10  Enterprise identity & secrets (LDAP/Kerberos, AWS Secrets Manager / Google Secret Manager, CA-signed certificates, etcd encryption at rest) — Requires corporate infrastructure; the lab uses Kubernetes Secrets and operator self-signed certificates.
+2026-11-05 00:42:26 |       P11  Load balancers / ingress with real external IPs and DNS — Lab exposes NodePorts on 127.0.0.1 only.
+2026-11-05 00:42:26 |       P12  Workload identity for communal storage (IRSA on Amazon EKS) — Vertica pods use their service-account JWT, exchanged through the cluster's OIDC provider for temporary S3 credentials, so no static access keys are stored (Vertica docs: IRSA profile authentication). Needs EKS and AWS IAM.
+2026-11-05 00:42:26 |       P13  Production identity provider for OAuth 2.0 / JWT (Okta, OTDS, or Keycloak in production mode) — The lab Keycloak runs in dev mode (in-memory database, HTTP inside the cluster). Production: HTTPS endpoints, a highly available IdP, just-in-time user provisioning and role mapping from token claims.
+2026-11-05 00:42:26 | ==== ALL EXECUTED TESTS PASSED (warnings may need review)

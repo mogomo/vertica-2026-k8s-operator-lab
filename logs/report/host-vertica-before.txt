@@ -1,0 +1,6 @@
+host_vertica_version=v26.3.0-2
+host_vertica_pids=none
+host_vertica_ports=none
+admintools_conf_mtime=1792244212
+dbadmin_uid=1001
+verticad_unit=enabled

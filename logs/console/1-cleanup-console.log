@@ -1,0 +1,94 @@
+Script started on 2026-11-05 00:12:58+02:00 [COMMAND="./vertica-k8s-lab.sh --cleanup --yes" TERM="screen" TTY="/dev/pts/1" COLUMNS="160" LINES="50"]
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  VERTICA K8S LAB — CLEANUP
+  2026-11-05 00:12:58 | log: /opt/vertica-k8s-lab/logs/cleanup-20261105-001258.log
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  ℹ Will REMOVE (only objects created by this script):
+      kind cluster 'vertica-lab' and its node containers: vertica-lab-control-plane vertica-lab-worker vertica-lab-worker2 vertica-lab-worker3
+      all Kubernetes objects inside it (VerticaDBs, pods, PVCs, services, CRDs, Helm release, MinIO)
+      Docker network vertica-lab-net, kind volumes, images pulled by the lab:
+         - kindest/node:v1.34.0@sha256:<digest>
+         - opentext/vertica-k8s:26.2.0-4-minimal
+         - cgr.dev/chainguard/minio:latest
+         - quay.io/keycloak/keycloak:26.7.5
+         - docker.io/opentext/verticadb-operator:26.2.2-0
+      Docker engine packages installed by the lab: containerd docker.io runc
+      runtime kernel settings raised by the lab (restored), and /opt/vertica-k8s-lab/{bin state logs reports manifests downloads cache tmp}
+  ℹ Will KEEP: host Vertica (/opt/vertica, dbadmin, its DB/ports/units), pre-existing Docker/images/networks,
+      this script (/opt/vertica-k8s-lab/vertica-k8s-lab.sh) and any license file you placed in /opt/vertica-k8s-lab
+
+━━ STEP 1/9 ━━ Stop lab background processes   00:12:58
+  ✔ No lab background processes
+  ✔ Step 1 finished in 0s
+
+━━ STEP 2/9 ━━ Delete Kubernetes resources (VerticaDBs, Helm release, CRDs)   00:12:58
+    $ timeout 300 kubectl delete vdb --all -A --wait=true --timeout=240s
+    $ timeout 120 kubectl delete vrpq --all -A --wait=false
+    $ helm uninstall vdb-op -n verticadb-operator --wait --timeout 3m
+    $ timeout 180 kubectl delete customresourcedefinition.apiextensions.k8s.io/eventtriggers.vertica.com customresourcedefinition.apiextensions.k8s.io/vclusterservers.vertica.com customresourcedefinition.apiextensions.k8s.io/verticaautoscalers.vertica.com customresourcedefinition.apiextensions.k8s.io/verticadbs.vertica.com customresourcedefinition.apiextensions.k8s.io/verticareplicators.vertica.com customresourcedefinition.apiextensions.k8s.io/verticarestorepointsqueries.vertica.com customresourcedefinition.apiextensions.k8s.io/verticascrutinizers.vertica.com --wait=false
+  ✔ Kubernetes objects removed (the cluster itself is deleted next)
+  ✔ Step 2 finished in 1s
+
+━━ STEP 3/9 ━━ Delete the kind cluster and its containers, volumes and network   00:12:59
+    $ kind delete cluster --name vertica-lab
+    $ docker network rm vertica-lab-net
+  ✔ kind cluster, node containers, volumes and network removed
+  ✔ Step 3 finished in 4s
+
+━━ STEP 4/9 ━━ Remove container images pulled by the lab (pre-existing images are preserved)   00:13:03
+    $ docker rmi kindest/node:v1.34.0@sha256:<digest>
+    $ docker rmi opentext/vertica-k8s:26.2.0-4-minimal
+    $ docker rmi cgr.dev/chainguard/minio:latest
+    $ docker rmi quay.io/keycloak/keycloak:26.7.5
+    $ docker rmi docker.io/opentext/verticadb-operator:26.2.2-0
+  ✔ Step 4 finished in 1s
+
+━━ STEP 5/9 ━━ Restore kernel runtime parameters   00:13:04
+    $ sysctl -w fs.inotify.max_user_watches=65536
+  ✔ fs.inotify.max_user_watches restored to 65536
+    $ sysctl -w fs.inotify.max_user_instances=128
+  ✔ fs.inotify.max_user_instances restored to 128
+  ✔ vm.max_map_count was not changed by the lab
+  ✔ Step 5 finished in 0s
+
+━━ STEP 6/9 ━━ Docker engine (only if installed by the lab)   00:13:04
+    $ systemctl disable --now docker.socket docker.service containerd.service
+    $ env DEBIAN_FRONTEND=noninteractive apt-get purge -y containerd docker.io runc
+    $ rm -rf /var/lib/docker
+    $ rm -rf /var/lib/containerd
+    $ rm -rf /run/docker
+    $ groupdel docker
+  ✔ Docker removed (it was installed by the lab)
+  ✔ Step 6 finished in 15s
+
+━━ STEP 7/9 ━━ Remove lab files (tools, manifests, downloads, caches)   00:13:19
+  ✔ Removed /opt/vertica-k8s-lab/{bin,manifests,downloads,cache,tmp}; state/logs are removed after the audit
+  ✔ Step 7 finished in 0s
+
+━━ STEP 8/9 ━━ Verify nothing remains and nothing will start after reboot   00:13:19
+    ✔ PASS Docker not installed (the lab's Docker, if any, was removed)
+    ✔ PASS No lab processes (kind/kubectl/helm/kubelet of the lab) running
+    ✔ PASS No systemd units created by the lab
+    ✔ PASS No cron entries referencing the lab
+    ✔ PASS No persistent sysctl configuration written by the lab
+    ✔ PASS Lab ports 35433/35434 are not listening
+    ✔ PASS Lab working directories removed from /opt/vertica-k8s-lab
+    ✔ PASS No lab context in /root/.kube/config
+    ℹ Host Vertica (read-only): host_vertica_version=v26.3.0-2 host_vertica_pids=none host_vertica_ports=none admintools_conf_mtime=1792244212 dbadmin_uid=1001 verticad_unit=enabled
+    ℹ Kernel values now: vm.max_map_count=4063232 fs.inotify.max_user_watches=65536 (runtime values reset at reboot)
+
+    ✔ RESULT: CLEAN — nothing from the lab is running or configured to start at boot.
+  ✔ Step 8 finished in 0s
+
+━━ STEP 9/9 ━━ Finish: remove state (credentials) and, unless --keep-logs, logs and reports   00:13:19
+  ✔ Removed /opt/vertica-k8s-lab/state (generated passwords, kubeconfig, tracking lists)
+  ✔ Logs and reports removed (use --keep-logs to keep them)
+  ℹ Left in /opt/vertica-k8s-lab: LAB_STATUS.md cleanup-console.log install-console.log test-partial-console.log test-validation-console.log validation-v1.1.0 vertica-k8s-lab.sh vertica_license.dat  (your script / license only)
+  ℹ Reboot test:  sudo reboot   then:  sudo /opt/vertica-k8s-lab/vertica-k8s-lab.sh --verify-clean
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  CLEANUP COMPLETE — no lab resources remain
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Script done on 2026-11-05 00:13:19+02:00 [COMMAND_EXIT_CODE="0"]

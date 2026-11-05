@@ -1,0 +1,541 @@
+Script started on 2026-11-05 00:13:20+02:00 [COMMAND="./vertica-k8s-lab.sh --install" TERM="screen" TTY="/dev/pts/1" COLUMNS="160" LINES="50"]
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  VERTICA KUBERNETES OPERATOR 26.3 LAB — INSTALL
+  kind + MinIO + verticadb-operator + Eon VerticaDB + Keycloak | 2026-11-05 00:13:20 | log: /opt/vertica-k8s-lab/logs/install-20261105-001320.log
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━ STEP 1/13 ━━ Pre-flight checks (OS, user, hardware, ports, host Vertica)   00:13:20
+  WHAT Validate the workstation can host the lab without disturbing the existing Vertica installation.
+  WHY  Fail fast with a clear message instead of half-installing on an unsuitable host.
+    Operating system               ubuntu 26.04
+    Kernel / arch                  7.0.0-34-generic / amd64
+    Invoking user                  <admin> (via sudo, EUID=0)
+    Script path                    /opt/vertica-k8s-lab/vertica-k8s-lab.sh
+    Lab directory                  /opt/vertica-k8s-lab
+    CPU cores                      22
+    RAM total / available          61 GB / 58 GB
+    Free disk /var/lib (Docker)    125 GB
+    Free disk /opt/vertica-k8s-lab 125 GB
+    Lab host port 35433            free / owned by lab
+    Lab host port 35434            free / owned by lab
+  ℹ Host Vertica (read-only inspection — nothing is modified):
+    host_vertica_version           v26.3.0-2
+    host_vertica_pids              none
+    host_vertica_ports             none
+    admintools_conf_mtime          1792244212
+    dbadmin_uid                    1001
+    verticad_unit                  enabled
+  ✔ Internet connectivity OK
+  ✔ Step 1 finished in 0s
+
+━━ STEP 2/13 ━━ Host prerequisites (packages + Docker engine)   00:13:20
+  WHAT Ensure curl, jq, tar, iproute2, util-linux, procps and a Docker engine are available.
+  WHY  kind runs each Kubernetes node as a Docker container; jq/curl drive the automation.
+  ✔ Base tools present: curl jq tar gzip ss flock pgrep
+  ℹ Docker not found — installing Ubuntu package docker.io (tracked; removed by --cleanup).
+  ℹ Installing missing packages: docker.io (recorded for cleanup)
+    $ env DEBIAN_FRONTEND=noninteractive apt-get update -y
+    $ env DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends docker.io
+    $ systemctl start docker
+    $ systemctl disable docker.service docker.socket
+  ✔ Docker installed: 29.1.3; boot autostart disabled
+  ✔ Recorded 0 pre-existing image references (never removed)
+  ✔ Step 2 finished in 6s
+  ✔ Generated random credentials -> /opt/vertica-k8s-lab/state/secrets.env (mode 600, root only)
+  ✔ Added identity-provider credentials to /opt/vertica-k8s-lab/state/secrets.env
+
+━━ STEP 3/13 ━━ Kernel runtime parameters (non-persistent)   00:13:26
+  WHAT Raise inotify limits (kind multi-node) and vm.max_map_count (Vertica requirement).
+  WHY  Vertica docs: vm.max_map_count >= max(65536, RAM_KB/16) on every Kubernetes node; kind nodes share the host kernel.
+    $ sysctl -w fs.inotify.max_user_watches=524288
+  ✔ fs.inotify.max_user_watches raised 65536 -> 524288 (runtime only; reverts at reboot / --cleanup)
+    $ sysctl -w fs.inotify.max_user_instances=512
+  ✔ fs.inotify.max_user_instances raised 128 -> 512 (runtime only; reverts at reboot / --cleanup)
+  ✔ vm.max_map_count = 4063232 (already >= 3997740, unchanged)
+  ℹ Nothing is written to /etc/sysctl.conf or /etc/sysctl.d — host Vertica settings stay as they are.
+  ✔ Step 3 finished in 0s
+
+━━ STEP 4/13 ━━ Kubernetes CLI tools (kind v0.30.0, kubectl v1.34.0, helm v3.18.4)   00:13:26
+  WHAT Download pinned, checksum-verified binaries into /opt/vertica-k8s-lab/bin (not on the system PATH).
+  WHY  Self-contained tooling: nothing is added to /usr/local/bin; cleanup deletes the directory.
+    $ curl -fsSL --retry 3 --retry-delay 3 --connect-timeout 20 -o /opt/vertica-k8s-lab/downloads/kind-v0.30.0/kind https://github.com/kubernetes-sigs/kind/releases/download/v0.30.0/kind-linux-amd64
+    $ curl -fsSL --retry 3 --retry-delay 3 --connect-timeout 20 -o /opt/vertica-k8s-lab/downloads/kind-v0.30.0/kind.sha256 https://github.com/kubernetes-sigs/kind/releases/download/v0.30.0/kind-linux-amd64.sha256sum
+  ✔ SHA-256 verified 517ab7fc89ddeed5fa65…
+  ✔ kind installed: kind v0.30.0 go1.24.6 linux/amd64
+    $ curl -fsSL --retry 3 --retry-delay 3 --connect-timeout 20 -o /opt/vertica-k8s-lab/downloads/kubectl-v1.34.0/kubectl https://dl.k8s.io/release/v1.34.0/bin/linux/amd64/kubectl
+    $ curl -fsSL --retry 3 --retry-delay 3 --connect-timeout 20 -o /opt/vertica-k8s-lab/downloads/kubectl-v1.34.0/kubectl.sha256 https://dl.k8s.io/release/v1.34.0/bin/linux/amd64/kubectl.sha256
+  ✔ SHA-256 verified cfda68cba5848bc3b6c6…
+  ✔ kubectl installed: v1.34.0
+    $ curl -fsSL --retry 3 --retry-delay 3 --connect-timeout 20 -o /opt/vertica-k8s-lab/downloads/helm-v3.18.4/helm-v3.18.4-linux-amd64.tar.gz https://get.helm.sh/helm-v3.18.4-linux-amd64.tar.gz
+    $ curl -fsSL --retry 3 --retry-delay 3 --connect-timeout 20 -o /opt/vertica-k8s-lab/downloads/helm-v3.18.4/helm-v3.18.4-linux-amd64.tar.gz.sha256sum https://get.helm.sh/helm-v3.18.4-linux-amd64.tar.gz.sha256sum
+  ✔ SHA-256 verified f8180838c23d7c7d797b…
+  ✔ helm installed: v3.18.4+gd80839c
+  ✔ Step 4 finished in 5s
+
+━━ STEP 5/13 ━━ Container images (official Vertica 26.3 server image, MinIO, kind node)   00:13:31
+  WHAT Resolve exact image tags, pull them into Docker and record them for cleanup.
+  WHY  Pinned tags make the lab reproducible; pre-existing images are never deleted.
+  ℹ Pulling kindest/node:v1.34.0@sha256:<digest> (first time can take several minutes)…
+    $ docker pull kindest/node:v1.34.0@sha256:<digest>
+      │ docker.io/kindest/node@sha256:<digest>: Pulling from kindest/node
+      │ 21eef5099de6: Pulling fs layer
+      │ 904fa8114083: Pulling fs layer
+      │ 21eef5099de6: Download complete
+      │ 904fa8114083: Download complete
+      │ 904fa8114083: Pull complete
+      │ 21eef5099de6: Pull complete
+      │ Digest: sha256:<digest>
+      │ Status: Downloaded newer image for kindest/node@sha256:<digest>
+      │ docker.io/kindest/node:v1.34.0@sha256:<digest>
+  ℹ Querying Docker Hub for opentext/vertica-k8s tags matching 26.3.x (host Vertica: 26.3.0-2)
+  ℹ Pulling opentext/vertica-k8s:26.3.0-0-minimal (first time can take several minutes)…
+    $ docker pull opentext/vertica-k8s:26.3.0-0-minimal
+      │ Error response from daemon: failed to resolve reference "docker.io/opentext/vertica-k8s:26.3.0-0-minimal": docker.io/opentext/vertica-k8s:26.3.0-0-minimal: not found
+  ⚠ Could not pull opentext/vertica-k8s:26.3.0-0-minimal — trying next candidate
+  ℹ Pulling opentext/vertica-k8s:26.3.0-0 (first time can take several minutes)…
+    $ docker pull opentext/vertica-k8s:26.3.0-0
+      │ Error response from daemon: failed to resolve reference "docker.io/opentext/vertica-k8s:26.3.0-0": docker.io/opentext/vertica-k8s:26.3.0-0: not found
+  ⚠ Could not pull opentext/vertica-k8s:26.3.0-0 — trying next candidate
+  ℹ Pulling opentext/vertica-k8s:26.3.0-0-minimal (first time can take several minutes)…
+    $ docker pull opentext/vertica-k8s:26.3.0-0-minimal
+      │ Error response from daemon: failed to resolve reference "docker.io/opentext/vertica-k8s:26.3.0-0-minimal": docker.io/opentext/vertica-k8s:26.3.0-0-minimal: not found
+  ⚠ Could not pull opentext/vertica-k8s:26.3.0-0-minimal — trying next candidate
+  ℹ Newest published tags: 26.2.0-4-multiarch latest 26.2.0-4-minimal 26.2.0-4 26.2.0-3-multiarch 26.2.0-3-minimal
+  ⚠ Vertica 26.3 container images are not published yet — falling back to the newest official release opentext/vertica-k8s:26.2.0-4-minimal
+  ℹ (set VERTICA_TARGET_VERSION=26.3 explicitly to disable this fallback; the operator chart follows the same version 26.2.x)
+  ℹ Pulling opentext/vertica-k8s:26.2.0-4-minimal (first time can take several minutes)…
+    $ docker pull opentext/vertica-k8s:26.2.0-4-minimal
+      │ 26.2.0-4-minimal: Pulling from opentext/vertica-k8s
+      │ 6c69bec89b49: Pulling fs layer
+      │ 19f25cc6d88d: Pulling fs layer
+      │ 29a611cd4f55: Pulling fs layer
+      │ 6c69bec89b49: Download complete
+      │ 19f25cc6d88d: Download complete
+      │ 19f25cc6d88d: Pull complete
+      │ 29a611cd4f55: Download complete
+      │ 6c69bec89b49: Pull complete
+      │ 29a611cd4f55: Pull complete
+      │ Digest: sha256:<digest>
+      │ Status: Downloaded newer image for opentext/vertica-k8s:26.2.0-4-minimal
+      │ docker.io/opentext/vertica-k8s:26.2.0-4-minimal
+  ✔ Vertica server image: opentext/vertica-k8s:26.2.0-4-minimal (Vertica 26.2)
+  ℹ Pulling quay.io/minio/minio:RELEASE.2025-09-07T16-13-09Z (first time can take several minutes)…
+    $ docker pull quay.io/minio/minio:RELEASE.2025-09-07T16-13-09Z
+      │ Error response from daemon: unknown: failed to resolve reference "quay.io/minio/minio:RELEASE.2025-09-07T16-13-09Z": unexpected status from HEAD request to https://quay.io/v2/minio/minio/manifests/RELEASE.2025-09-07T16-13-09Z: 401 UNAUTHORIZED
+  ⚠ MinIO candidate quay.io/minio/minio:RELEASE.2025-09-07T16-13-09Z not pullable — trying next
+  ℹ Pulling minio/minio:RELEASE.2025-09-07T16-13-09Z (first time can take several minutes)…
+    $ docker pull minio/minio:RELEASE.2025-09-07T16-13-09Z
+      │ Error response from daemon: pull access denied for minio/minio, repository does not exist or may require 'docker login'
+  ⚠ MinIO candidate minio/minio:RELEASE.2025-09-07T16-13-09Z not pullable — trying next
+  ℹ Pulling quay.io/minio/minio:RELEASE.2025-04-22T22-12-26Z (first time can take several minutes)…
+    $ docker pull quay.io/minio/minio:RELEASE.2025-04-22T22-12-26Z
+      │ Error response from daemon: unknown: failed to resolve reference "quay.io/minio/minio:RELEASE.2025-04-22T22-12-26Z": unexpected status from HEAD request to https://quay.io/v2/minio/minio/manifests/RELEASE.2025-04-22T22-12-26Z: 401 UNAUTHORIZED
+  ⚠ MinIO candidate quay.io/minio/minio:RELEASE.2025-04-22T22-12-26Z not pullable — trying next
+  ℹ Pulling minio/minio:RELEASE.2025-04-22T22-12-26Z (first time can take several minutes)…
+    $ docker pull minio/minio:RELEASE.2025-04-22T22-12-26Z
+      │ Error response from daemon: pull access denied for minio/minio, repository does not exist or may require 'docker login'
+  ⚠ MinIO candidate minio/minio:RELEASE.2025-04-22T22-12-26Z not pullable — trying next
+  ℹ Pulling minio/minio:RELEASE.2024-12-18T13-15-44Z (first time can take several minutes)…
+    $ docker pull minio/minio:RELEASE.2024-12-18T13-15-44Z
+      │ Error response from daemon: pull access denied for minio/minio, repository does not exist or may require 'docker login'
+  ⚠ MinIO candidate minio/minio:RELEASE.2024-12-18T13-15-44Z not pullable — trying next
+  ℹ Pulling cgr.dev/chainguard/minio:latest (first time can take several minutes)…
+    $ docker pull cgr.dev/chainguard/minio:latest
+      │ latest: Pulling from chainguard/minio
+      │ b7076b7a9761: Pulling fs layer
+      │ e7bc74d91d60: Pulling fs layer
+      │ 3d6eb940d333: Pulling fs layer
+      │ d39936687fa8: Pulling fs layer
+      │ 1a3008bae3dd: Pulling fs layer
+      │ f4265a56de30: Pulling fs layer
+      │ f4fa1d391506: Pulling fs layer
+      │ 47573a9077ef: Pulling fs layer
+      │ cd1a07eab0f0: Pulling fs layer
+      │ 621b1503e421: Pulling fs layer
+      │ 5243dc7e3601: Pulling fs layer
+      │ b7076b7a9761: Download complete
+      │ 621b1503e421: Download complete
+      │ f4265a56de30: Download complete
+      │ 5243dc7e3601: Download complete
+      │ 1a3008bae3dd: Download complete
+      │ e7bc74d91d60: Download complete
+      │ cd1a07eab0f0: Download complete
+      │ 47573a9077ef: Download complete
+      │ f4fa1d391506: Download complete
+      │ 3d6eb940d333: Download complete
+      │ d39936687fa8: Download complete
+      │ d39936687fa8: Pull complete
+      │ 1a3008bae3dd: Pull complete
+      │ 3d6eb940d333: Pull complete
+      │ 5243dc7e3601: Pull complete
+      │ e7bc74d91d60: Pull complete
+      │ cd1a07eab0f0: Pull complete
+      │ f4fa1d391506: Pull complete
+      │ b7076b7a9761: Pull complete
+      │ 621b1503e421: Pull complete
+      │ f4265a56de30: Pull complete
+      │ 47573a9077ef: Pull complete
+      │ Digest: sha256:<digest>
+      │ Status: Downloaded newer image for cgr.dev/chainguard/minio:latest
+      │ cgr.dev/chainguard/minio:latest
+  ✔ MinIO image: cgr.dev/chainguard/minio:latest
+  ℹ Pulling quay.io/keycloak/keycloak:26.7.5 (first time can take several minutes)…
+    $ docker pull quay.io/keycloak/keycloak:26.7.5
+      │ 26.7.5: Pulling from keycloak/keycloak
+      │ a20d861de2b7: Pulling fs layer
+      │ 227bdb4b4505: Pulling fs layer
+      │ 7b990cac69b4: Pulling fs layer
+      │ ab0d2ceff68e: Pulling fs layer
+      │ a20d861de2b7: Download complete
+      │ 227bdb4b4505: Download complete
+      │ 44136fa355b3: Download complete
+      │ 227bdb4b4505: Pull complete
+      │ 7efbc687a9d9: Download complete
+      │ 7b990cac69b4: Download complete
+      │ 7b990cac69b4: Pull complete
+      │ ab0d2ceff68e: Download complete
+      │ a20d861de2b7: Pull complete
+      │ ab0d2ceff68e: Pull complete
+      │ Digest: sha256:<digest>
+      │ Status: Downloaded newer image for quay.io/keycloak/keycloak:26.7.5
+      │ quay.io/keycloak/keycloak:26.7.5
+  ✔ Identity provider image: quay.io/keycloak/keycloak:26.7.5
+  ✔ Step 5 finished in 67s
+
+━━ STEP 6/13 ━━ Kubernetes cluster (kind 'vertica-lab': 1 control-plane + 3 workers)   00:14:38
+  WHAT Create (or restart) a 4-node Kubernetes cluster where every node is a Docker container.
+  WHY  Three workers let us demonstrate pod anti-affinity, K-safety and node failure on one workstation.
+  ℹ Creating cluster — kind prints its own progress below:
+    $ kind create cluster --config /opt/vertica-k8s-lab/manifests/kind-config.yaml --wait 10m
+      │ Creating cluster "vertica-lab" ...
+      │  • Ensuring node image (kindest/node:v1.34.0) 🖼  ...
+      │ WARNING: Overriding docker network due to KIND_EXPERIMENTAL_DOCKER_NETWORK
+      │ WARNING: Here be dragons! This is not supported currently.
+      │  ✓ Ensuring node image (kindest/node:v1.34.0) 🖼
+      │  • Preparing nodes 📦 📦 📦 📦   ...
+      │  ✓ Preparing nodes 📦 📦 📦 📦
+      │  • Writing configuration 📜  ...
+      │  ✓ Writing configuration 📜
+      │  • Starting control-plane 🕹️  ...
+      │  ✓ Starting control-plane 🕹️
+      │  • Installing CNI 🔌  ...
+      │  ✓ Installing CNI 🔌
+      │  • Installing StorageClass 💾  ...
+      │  ✓ Installing StorageClass 💾
+      │  • Joining worker nodes 🚜  ...
+      │  ✓ Joining worker nodes 🚜
+      │  • Waiting ≤ 10m0s for control-plane = Ready ⏳  ...
+      │  ✓ Waiting ≤ 10m0s for control-plane = Ready ⏳
+      │  • Ready after 10s 💚
+      │ Set kubectl context to "kind-vertica-lab"
+      │ You can now use your cluster with:
+      │
+      │ kubectl cluster-info --context kind-vertica-lab --kubeconfig /opt/vertica-k8s-lab/state/kubeconfig
+      │
+      │ Not sure what to do next? 😅  Check out https://kind.sigs.k8s.io/docs/user/quick-start/
+  ✔ kind node containers set to restart=no (nothing auto-starts after an Ubuntu reboot)
+  ✔ Kubernetes nodes Ready [5s] — nodes Ready 4/4
+    $ kubectl get nodes -o wide
+      │ NAME                        STATUS   ROLES           AGE   VERSION   INTERNAL-IP   EXTERNAL-IP   OS-IMAGE                         KERNEL-VERSION     CONTAINER-RUNTIME
+      │ vertica-lab-control-plane   Ready    control-plane   26s   v1.34.0   <ip>    <none>        Debian GNU/Linux 12 (bookworm)   7.0.0-34-generic   containerd://2.1.3
+      │ vertica-lab-worker          Ready    <none>          17s   v1.34.0   <ip>    <none>        Debian GNU/Linux 12 (bookworm)   7.0.0-34-generic   containerd://2.1.3
+      │ vertica-lab-worker2         Ready    <none>          16s   v1.34.0   <ip>    <none>        Debian GNU/Linux 12 (bookworm)   7.0.0-34-generic   containerd://2.1.3
+      │ vertica-lab-worker3         Ready    <none>          16s   v1.34.0   <ip>    <none>        Debian GNU/Linux 12 (bookworm)   7.0.0-34-generic   containerd://2.1.3
+  ✔ Step 6 finished in 33s
+
+━━ STEP 7/13 ━━ Pre-load images into the kind nodes   00:15:11
+  WHAT Copy the Vertica and MinIO images from the host Docker cache into every node's containerd.
+  WHY  Faster, reliable pod starts and no Docker Hub rate-limit surprises during failover tests.
+  ℹ Loading opentext/vertica-k8s:26.2.0-4-minimal into all kind nodes (avoids registry pulls inside the cluster)…
+    $ kind load docker-image opentext/vertica-k8s:26.2.0-4-minimal --name vertica-lab
+  ✔ Loaded opentext/vertica-k8s:26.2.0-4-minimal
+  ℹ Loading cgr.dev/chainguard/minio:latest into all kind nodes (avoids registry pulls inside the cluster)…
+    $ kind load docker-image cgr.dev/chainguard/minio:latest --name vertica-lab
+      (exit 1 tolerated)
+  ℹ Retrying with a single-platform archive (linux/amd64)…
+    $ docker save --platform linux/amd64 -o /opt/vertica-k8s-lab/tmp/img-823948.tar cgr.dev/chainguard/minio:latest
+    $ kind load image-archive /opt/vertica-k8s-lab/tmp/img-823948.tar --name vertica-lab
+  ✔ Loaded cgr.dev/chainguard/minio:latest (single-platform archive)
+  ℹ Loading quay.io/keycloak/keycloak:26.7.5 into all kind nodes (avoids registry pulls inside the cluster)…
+    $ kind load docker-image quay.io/keycloak/keycloak:26.7.5 --name vertica-lab
+      (exit 1 tolerated)
+  ℹ Retrying with a single-platform archive (linux/amd64)…
+    $ docker save --platform linux/amd64 -o /opt/vertica-k8s-lab/tmp/img-823948.tar quay.io/keycloak/keycloak:26.7.5
+    $ kind load image-archive /opt/vertica-k8s-lab/tmp/img-823948.tar --name vertica-lab
+  ✔ Loaded quay.io/keycloak/keycloak:26.7.5 (single-platform archive)
+  ✔ Step 7 finished in 39s
+
+━━ STEP 8/13 ━━ Cluster add-ons: metrics-server, namespaces, Pod Security labels, RBAC   00:15:50
+  WHAT Install metrics-server (kubectl top) and create lab namespaces + least-privilege accounts.
+  WHY  Monitoring needs resource metrics; namespaces/RBAC demonstrate tenant isolation.
+    $ curl -fsSL --retry 3 --retry-delay 3 --connect-timeout 20 -o /opt/vertica-k8s-lab/downloads/metrics-server-v0.7.2.yaml https://github.com/kubernetes-sigs/metrics-server/releases/download/v0.7.2/components.yaml
+    $ kubectl apply -f /opt/vertica-k8s-lab/downloads/metrics-server-v0.7.2.yaml
+    $ kubectl -n kube-system patch deploy metrics-server --type=json -p [{"op":"add","path":"/spec/template/spec/containers/0/args/-","value":"--kubelet-insecure-tls"}]
+    $ kubectl apply -f /opt/vertica-k8s-lab/manifests/namespaces.yaml
+  ✔ Step 8 finished in 1s
+
+━━ STEP 9/13 ━━ Communal storage: MinIO (S3-compatible) for Eon Mode   00:15:51
+  WHAT Deploy a MinIO object store on the control-plane node with a persistent volume and bucket 'vertica-lab'.
+  WHY  Eon Mode keeps the authoritative copy of data in communal (S3) storage — enables revive, scaling and DR.
+    $ kubectl apply -f /opt/vertica-k8s-lab/manifests/minio.yaml
+  ✔ MinIO pod ready [10s] — MinIO ready replicas: 1/1
+    $ kubectl -n vertica-lab-minio exec deploy/minio -- mc mb --ignore-existing local/vertica-lab
+  ✔ Dedicated MinIO identity 'vertica-communal' (readwrite policy) created for Vertica
+  ✔ Bucket s3://vertica-lab ready at http://minio.vertica-lab-minio.svc.cluster.local:9000
+  ✔ Kubernetes Secret vertica-lab/communal-creds (keys: accesskey, secretkey)
+  ✔ Step 9 finished in 11s
+
+━━ STEP 10/13 ━━ VerticaDB operator 26.2.x (official Helm chart https://vertica.github.io/charts)   00:16:02
+  WHAT helm repo add vertica-charts; helm upgrade --install vdb-op (webhook + controllers + CRDs).
+  WHY  The operator automates create/revive/restart/scale/upgrade and validates CR changes via its admission webhook.
+    $ helm repo add vertica-charts https://vertica.github.io/charts --force-update
+    $ helm repo update vertica-charts
+    Operator chart version         26.2.2
+  ℹ Pulling docker.io/opentext/verticadb-operator:26.2.2-0 (first time can take several minutes)…
+    $ docker pull docker.io/opentext/verticadb-operator:26.2.2-0
+      │ 26.2.2-0: Pulling from opentext/verticadb-operator
+      │ b54ca273fc1b: Pulling fs layer
+      │ 617b009a71d6: Pulling fs layer
+      │ a99dd1dd5eaf: Pulling fs layer
+      │ 3214acf345c0: Pulling fs layer
+      │ 2cc7ee286bf3: Pulling fs layer
+      │ d6b1b89eccac: Pulling fs layer
+      │ 52630fc75a18: Pulling fs layer
+      │ 7c12895b777b: Pulling fs layer
+      │ c172f21841df: Pulling fs layer
+      │ 2780920e5dbf: Pulling fs layer
+      │ ec1b04bf2eb2: Pulling fs layer
+      │ dd64bf2dd177: Pulling fs layer
+      │ ebddc55facdc: Pulling fs layer
+      │ b839dfae01f6: Pulling fs layer
+      │ 7c12895b777b: Download complete
+      │ 617b009a71d6: Download complete
+      │ 52630fc75a18: Download complete
+      │ c172f21841df: Download complete
+      │ ebddc55facdc: Download complete
+      │ dd64bf2dd177: Download complete
+      │ 3214acf345c0: Download complete
+      │ 2cc7ee286bf3: Download complete
+      │ d6b1b89eccac: Download complete
+      │ 2780920e5dbf: Download complete
+      │ 44136fa355b3: Already exists
+      │ ec1b04bf2eb2: Download complete
+      │ b839dfae01f6: Download complete
+      │ a99dd1dd5eaf: Download complete
+      │ 2cc7ee286bf3: Pull complete
+      │ 617b009a71d6: Pull complete
+      │ c172f21841df: Pull complete
+      │ d6b1b89eccac: Pull complete
+      │ a99dd1dd5eaf: Pull complete
+      │ 4f4838462253: Download complete
+      │ 7c12895b777b: Pull complete
+      │ 3214acf345c0: Pull complete
+      │ 2780920e5dbf: Pull complete
+      │ 52630fc75a18: Pull complete
+      │ dd64bf2dd177: Pull complete
+      │ b839dfae01f6: Pull complete
+      │ ebddc55facdc: Pull complete
+      │ ec1b04bf2eb2: Pull complete
+      │ b54ca273fc1b: Download complete
+      │ b54ca273fc1b: Pull complete
+      │ Digest: sha256:<digest>
+      │ Status: Downloaded newer image for opentext/verticadb-operator:26.2.2-0
+      │ docker.io/opentext/verticadb-operator:26.2.2-0
+  ℹ Loading docker.io/opentext/verticadb-operator:26.2.2-0 into all kind nodes (avoids registry pulls inside the cluster)…
+    $ kind load docker-image docker.io/opentext/verticadb-operator:26.2.2-0 --name vertica-lab
+      (exit 1 tolerated)
+  ℹ Retrying with a single-platform archive (linux/amd64)…
+    $ docker save --platform linux/amd64 -o /opt/vertica-k8s-lab/tmp/img-823948.tar docker.io/opentext/verticadb-operator:26.2.2-0
+    $ kind load image-archive /opt/vertica-k8s-lab/tmp/img-823948.tar --name vertica-lab
+  ✔ Loaded docker.io/opentext/verticadb-operator:26.2.2-0 (single-platform archive)
+    $ helm upgrade --install vdb-op vertica-charts/verticadb-operator --version 26.2.2 -n verticadb-operator --create-namespace -f /opt/vertica-k8s-lab/manifests/operator-values.yaml --timeout 10m
+      │ Release "vdb-op" does not exist. Installing it now.
+      │ I1105 00:16:15.077741  847706 warnings.go:110] "Warning: unrecognized format \"int32\""
+      │ I1105 00:16:15.077754  847706 warnings.go:110] "Warning: unrecognized format \"int64\""
+      │ I1105 00:16:15.119538  847706 warnings.go:110] "Warning: unrecognized format \"int32\""
+      │ I1105 00:16:15.119549  847706 warnings.go:110] "Warning: unrecognized format \"int64\""
+      │ I1105 00:16:15.204221  847706 warnings.go:110] "Warning: unrecognized format \"int32\""
+      │ I1105 00:16:15.204238  847706 warnings.go:110] "Warning: unrecognized format \"int64\""
+      │ I1105 00:16:15.230299  847706 warnings.go:110] "Warning: unrecognized format \"int64\""
+      │ I1105 00:16:15.244371  847706 warnings.go:110] "Warning: unrecognized format \"int64\""
+      │ I1105 00:16:15.292909  847706 warnings.go:110] "Warning: unrecognized format \"int32\""
+      │ I1105 00:16:15.292925  847706 warnings.go:110] "Warning: unrecognized format \"int64\""
+      │ NAME: vdb-op
+      │ LAST DEPLOYED: Thu Nov  5 00:16:17 2026
+      │ NAMESPACE: verticadb-operator
+      │ STATUS: deployed
+      │ REVISION: 1
+      │ TEST SUITE: None
+      │ NOTES:
+      │ Welcome to...
+      │
+      │
+      │ VERTICA DB - OPERATOR
+  ✔ VerticaDB operator available [16s] — operator deployments available 1/1
+    $ kubectl -n verticadb-operator get pods -o wide
+      │ NAME                                          READY   STATUS    RESTARTS   AGE   IP           NODE                        NOMINATED NODE   READINESS GATES
+      │ verticadb-operator-manager-6df8bb5699-plczz   1/1     Running   0          16s   <ip>   vertica-lab-control-plane   <none>           <none>
+  ✔ CRD verticadbs.vertica.com installed
+  ✔ CRD verticarestorepointsqueries.vertica.com installed
+    $ kubectl get crd -o custom-columns=CRD:.metadata.name --no-headers -l app.kubernetes.io/name=verticadb-operator
+  ✔ ClusterRoleBinding vlab-metrics-reader -> verticadb-operator-verticadb-operator-vdb-op-metrics-reader (for authenticated /metrics scraping)
+  ✔ Step 10 finished in 31s
+
+━━ STEP 11/13 ━━ Eon Mode VerticaDB 'labdb' (CR 'vdb': 3-node K-safe primary subcluster)   00:16:33
+  WHAT Create Secrets, the vsql client pod and the VerticaDB custom resource; the operator builds the DB.
+  WHY  Exercises the operator's full create workflow: StatefulSet, PVCs, services, create_db, TLS, license.
+  ✔ Kubernetes Secret vertica-lab/vdb-su-password (superuser password; never stored in the CR)
+  ✔ License Secret vertica-lab/vdb-license created from /opt/vertica-k8s-lab/vertica_license.dat (CRLF normalised; the file itself is never modified or deleted)
+  ℹ Resource plan (resource-aware sizing; kind nodes all share this workstation's RAM/CPU):
+    Host RAM total / available     61 GB / 56 GB
+    Reserved for host + host Vertica 8 GB (HOST_RESERVE_GB)
+    Per Vertica pod (Guaranteed QoS) 7 GiB RAM, 3 CPU (requests = limits)
+    HA database footprint          3 pods = 21 GiB
+    Scaling-test pods (temporary)  up to 2 x 3 GiB RAM, 1 CPU
+    Licensed max nodes / scaling path 5 / secondary subcluster on main DB
+    Fact table rows (SALES_ROWS)   5000000
+    $ kubectl apply -f /opt/vertica-k8s-lab/manifests/client.yaml
+  ✔ SQL client pod ready [6s] — client pod: Running
+  ℹ VerticaDB manifest: /opt/vertica-k8s-lab/manifests/vdb.yaml
+      # VerticaDB 'vdb' generated by vertica-k8s-lab.sh (vertica-k8s-lab)
+      apiVersion: vertica.com/v1
+      kind: VerticaDB
+      metadata:
+        name: vdb
+        namespace: vertica-lab
+        labels:
+          vertica-lab/managed: "true"
+        annotations:
+          vertica.com/include-uid-in-path: "false"
+          vertica.com/enable-fallthrough: "true"
+      spec:
+        image: opentext/vertica-k8s:26.2.0-4-minimal
+        imagePullPolicy: IfNotPresent
+        dbName: labdb
+        initPolicy: CreateSkipPackageInstall
+        passwordSecret: vdb-su-password
+        licenseSecret: vdb-license
+        autoRestartVertica: true
+        upgradePolicy: Auto
+        shardCount: 6
+        labels:
+          vertica-lab/db: vdb
+        communal:
+          path: "s3://vertica-lab/labdb-20261105001639"
+          endpoint: "http://minio.vertica-lab-minio.svc.cluster.local:9000"
+          credentialSecret: communal-creds
+          region: us-east-1
+        local:
+          requestSize: 20Gi
+          storageClass: standard
+        httpsNMATLS:
+          enabled: true
+        clientServerTLS:
+          enabled: true
+        interNodeTLS:
+          enabled: true
+          mode: VERIFY_CA
+        subclusters:
+        - name: primary
+          type: primary
+          size: 3
+          serviceType: NodePort
+          clientNodePort: 30433
+          resources:
+            requests: {cpu: "3", memory: 7Gi}
+            limits: {cpu: "3", memory: 7Gi}
+          affinity:
+            podAntiAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution:
+              - labelSelector: {matchLabels: {vertica.com/subcluster-selector-name: vdb-primary}}
+                topologyKey: kubernetes.io/hostname
+    $ kubectl apply -f /opt/vertica-k8s-lab/manifests/vdb.yaml
+  ℹ The operator now creates StatefulSet/PVCs/Services and bootstraps the database. Live operator events:
+    ⎈ operator event LicenseValidationFail        no valid Vertica license found from secret vdb-license
+    ⎈ operator event LicenseValidationSucceeded   1 valid Vertica license found from secret 'vdb-license'
+    ⎈ operator event CreateDBStart                Starting create database
+    ⎈ operator event CreateDBSucceeded            Successfully created database with subcluster 'primary'. It took 34s
+    ⎈ operator event TLSConfigurationStarted      Starting to configure TLS for httpsNMA
+    ⎈ operator event TLSConfigurationSucceeded    Successfully set HTTP tls config
+    ⎈ operator event TLSConfigurationStarted      Starting to configure TLS for clientServer
+    ⎈ operator event TLSConfigurationSucceeded    Successfully set Server tls config
+    ⎈ operator event NMATLSCertRotationStarted    Start restarting nma with cert vdb-https-tls-k94jl
+    ⎈ operator event NMATLSCertRotationSucceeded  Successfully restarted nma with cert vdb-https-tls-k94jl
+    ⎈ operator event TLSConfigurationStarted      Starting to configure TLS for interNode
+    ⎈ operator event TLSConfigurationSucceeded    Successfully set Internode tls config
+  ✔ Vertica database labdb up (3/3 nodes) [62s] — pods Ready 3/3 | Vertica nodes UP 3/3
+  ✔ Auth policy for labdb: plain-text (non-TLS) remote logins are REJECTED (records vlab_reject_plain_ipv4/ipv6)
+    $ kubectl -n vertica-lab get vdb,sts,pods,pvc,svc -o wide
+      │ NAME                        SUBCLUSTERS   VERSION     READY   AGE
+      │ verticadb.vertica.com/vdb   1             v26.2.0-4   3/3     62s
+      │
+      │ NAME                           READY   AGE   CONTAINERS   IMAGES
+      │ statefulset.apps/vdb-primary   3/3     52s   nma,server   opentext/vertica-k8s:26.2.0-4-minimal,opentext/vertica-k8s:26.2.0-4-minimal
+      │ statefulset.apps/vlab-client   1/1     68s   client       opentext/vertica-k8s:26.2.0-4-minimal
+      │
+      │ NAME                READY   STATUS    RESTARTS      AGE   IP           NODE                        NOMINATED NODE   READINESS GATES
+      │ pod/vdb-primary-0   2/2     Running   1 (11s ago)   52s   <ip>   vertica-lab-worker3         <none>           <none>
+      │ pod/vdb-primary-1   2/2     Running   1 (11s ago)   52s   <ip>   vertica-lab-worker2         <none>           <none>
+      │ pod/vdb-primary-2   2/2     Running   1 (11s ago)   52s   <ip>   vertica-lab-worker          <none>           <none>
+      │ pod/vlab-client-0   1/1     Running   0             68s   <ip>   vertica-lab-control-plane   <none>           <none>
+      │
+      │ NAME                                             STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   VOLUMEATTRIBUTESCLASS   AGE   VOLUMEMODE
+      │ persistentvolumeclaim/local-data-vdb-primary-0   Bound    pvc-<uuid>   20Gi       RWO            standard       <unset>                 58s   Filesystem
+      │ persistentvolumeclaim/local-data-vdb-primary-1   Bound    pvc-<uuid>   20Gi       RWO            standard       <unset>                 58s   Filesystem
+      │ persistentvolumeclaim/local-data-vdb-primary-2   Bound    pvc-<uuid>   20Gi       RWO            standard       <unset>                 58s   Filesystem
+      │
+      │ NAME                  TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)                               AGE   SELECTOR
+      │ service/vdb           ClusterIP   None            <none>        5434/TCP,4803/TCP,8443/TCP,5554/TCP   52s   app.kubernetes.io/instance=vdb
+      │ service/vdb-primary   NodePort    <ip>   <none>        5433:30433/TCP,8443:32163/TCP         52s   app.kubernetes.io/instance=vdb,vertica.com/client-routing=true,vertica.com/subcluster-svc=primary
+  ✔ Step 11 finished in 68s
+
+━━ STEP 12/13 ━━ Identity provider: Keycloak (OAuth 2.0 / OpenID Connect) for machine-to-machine logins   00:17:41
+  WHAT Run Keycloak in namespace vertica-lab-idp, create realm 'vertica-lab' and service clients that log in with client credentials.
+  WHY  Applications and jobs should not hold database passwords: they get a short-lived signed token (JWT) instead.
+    $ kubectl apply -f /opt/vertica-k8s-lab/manifests/keycloak-ns.yaml
+  ✔ Kubernetes Secret vertica-lab-idp/keycloak-admin (Keycloak bootstrap admin)
+    $ kubectl apply -f /opt/vertica-k8s-lab/manifests/keycloak.yaml
+  ✔ Keycloak ready [20s] — Keycloak ready replicas: 1/1
+  ✔ Realm 'vertica-lab': client scope 'vertica' (audience + scope) and service clients svc_etl svc_other svc_short
+  ✔ Kubernetes Secret vertica-lab/oauth-clients (client secrets for the service workloads)
+  ✔ OpenID Connect discovery from the Vertica namespace: issuer http://keycloak.vertica-lab-idp.svc.cluster.local:8080/realms/vertica-lab
+  ✔ Vertica auth record vlab_oauth_jwt: METHOD oauth, validate_type=JWT, keys from JWKS, issuer + audience + scope enforced, TLS only
+    ◆ SQL OAuth / JWT authentication record
+      SELECT auth_name, auth_method, auth_host_type, is_auth_enabled, REPLACE(auth_parameters, 'http://keycloak.vertica-lab-idp.svc.cluster.local:8080', '<keycloak>') AS parameters FROM client_auth WHERE auth_name='vlab_oauth_jwt';
+      │    auth_name    | auth_method | auth_host_type | is_auth_enabled |                                                                                                            parameters
+      │ ----------------+-------------+----------------+-----------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+      │  vlab_oauth_jwt | OAUTH       | HOSTSSL        | True            | validate_type=JWT, jwt_issuer=<keycloak>/realms/vertica-lab, jwt_user_mapping=azp, jwt_accepted_audience_list=vertica, jwt_accepted_scope_list=vertica, jwt_jwks_url=<keycloak>/realms/vertica-lab/protocol/openid-connect/certs
+      │ (1 row)
+  ✔ Step 12 finished in 56s
+
+━━ STEP 13/13 ━━ Post-install verification and connection details   00:18:37
+  WHAT Run quick SQL against the new database and print how to connect.
+    ◆ SQL Cluster nodes
+      SELECT n.node_name, n.node_state, n.node_address, s.subcluster_name, s.is_primary FROM nodes n JOIN subclusters s ON s.node_name = n.node_name ORDER BY 1;
+      │     node_name     | node_state | node_address | subcluster_name | is_primary
+      │ ------------------+------------+--------------+-----------------+------------
+      │  v_labdb_node0001 | UP         | <ip>   | primary         | t
+      │  v_labdb_node0002 | UP         | <ip>   | primary         | t
+      │  v_labdb_node0003 | UP         | <ip>   | primary         | t
+      │ (3 rows)
+    ◆ SQL Version / fault tolerance
+      SELECT version() AS version, (SELECT designed_fault_tolerance FROM system) AS designed_k, (SELECT current_fault_tolerance FROM system) AS current_k;
+      │                version               | designed_k | current_k
+      │ -------------------------------------+------------+-----------
+      │  Vertica Analytic Database v26.2.0-4 |          1 |         1
+      │ (1 row)
+  ℹ Connect from this workstation (host vsql, read-only use of /opt/vertica/bin/vsql):
+      /opt/vertica/bin/vsql -m prefer -h 127.0.0.1 -p 35433 -U dbadmin -d labdb
+      password: sudo grep DB_PASSWORD /opt/vertica-k8s-lab/state/secrets.env | cut -d= -f2
+  ℹ kubectl for the lab: sudo /opt/vertica-k8s-lab/bin/kubectl --kubeconfig /opt/vertica-k8s-lab/state/kubeconfig get pods -n vertica-lab
+  ✔ Step 13 finished in 0s
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  INSTALL COMPLETE
+  Next:  sudo /opt/vertica-k8s-lab/vertica-k8s-lab.sh --test     (or --status)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  Log file: /opt/vertica-k8s-lab/logs/install-20261105-001320.log
+
+Script done on 2026-11-05 00:18:37+02:00 [COMMAND_EXIT_CODE="0"]

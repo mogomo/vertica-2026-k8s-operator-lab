@@ -1,0 +1,217 @@
+Vertica Kubernetes Operator lab — test report (2026-11-05 00:42:26)
+Host: workstation  Image: opentext/vertica-k8s:26.2.0-4-minimal  Operator chart: 26.2.2
+Totals: PASS=15 FAIL=0 WARN=0 SKIP=0
+
+Results (id,group,scope,status,seconds,title,message):
+id,group,scope,status,seconds,title,message
+T01,health,REAL,PASS,1,"Cluster health check","Kubernetes: 4/4 nodes Ready"
+T02,workload,REAL,PASS,2,"SQL workload: build and verify a star schema","Row count verified: lab.sales = 5000000"
+T03,perf,REAL,PASS,14,"Query performance, concurrency and bulk load","Analytic query benchmark completed (results in perf.csv)"
+T04,storage,REAL,PASS,0,"Persistent storage (local volumes + S3 communal)","Each Vertica pod has its own Bound PersistentVolume (catalog + depot)"
+T05,monitoring,REAL,PASS,1,"Monitoring and metrics endpoints","metrics-server: live resource metrics available"
+T06,security,REAL,PASS,34,"Security controls (secrets, RBAC, TLS, network)","Superuser password only referenced via Secret (not present in CR / StatefulSet specs)"
+T07,m2m,REAL,PASS,25,"Machine-to-machine database login (OAuth 2.0 / JWT)","Identity provider Keycloak ready (realm vertica-lab  OpenID Connect)"
+T08,isolation,REAL,PASS,10,"Workload isolation with resource pools","Resource pools lab_etl_pool (capped) and lab_bi_pool (high priority) created"
+T09,reconcile,REAL,PASS,67,"Operator auto-repair of configuration drift","Deleted Service recreated by the operator"
+T10,selfheal,SIM,PASS,60,"Self-healing: Vertica process crash","Database stayed UP with K-safety while a node was down (2/3 UP)"
+T11,selfheal,SIM,PASS,60,"Self-healing: Vertica pod deleted","Pod recreated by StatefulSet controller"
+T12,nodefail,SIM,PASS,105,"Node failure: a worker server freezes","Reads AND writes succeed with 1 of 3 nodes failed (K-safety 1)"
+T13,backup,REAL,PASS,95,"Backup, restore and disaster recovery","Restore point saved via VerticaRestorePointsQuery (SaveRestorePoint)"
+T14,scaling,SIM,PASS,120,"Elastic scaling: add and remove compute online","Scale-out: new subcluster added online"
+T15,final,REAL,PASS,2,"Final health and host-safety check","Kubernetes: 4/4 nodes Ready"
+P01,production,PROD,N/A,0,"Permanent host loss with pod rescheduling onto another physical machine","Local-path PVs pin each Vertica pod to one node; production needs network/replicated CSI storage (EBS; Ceph; Portworx; vSAN) so the StatefulSet pod can restart elsewhere."
+P02,production,PROD,N/A,0,"Kubernetes control-plane high availability","kind here has 1 control-plane; production uses 3+ control-plane nodes / managed K8s with an etcd quorum."
+P03,production,PROD,N/A,0,"Zone / rack fault domains","Needs real failure domains with topologySpreadConstraints / zone labels; all 'nodes' here share one workstation."
+P04,production,PROD,N/A,0,"Real network partitions, NIC/switch failures and latency between hosts","Simulated only by freezing a node container; real Spread heartbeat behaviour needs separate hosts."
+P05,production,PROD,N/A,0,"Production performance and capacity benchmarks","All pods share the same CPU; RAM and SSD; numbers are relative; not sizing guidance."
+P06,production,PROD,N/A,0,"Durable communal storage","A single MinIO pod on one disk is not durable; production uses S3 or an erasure-coded/replicated on-prem object store with TLS."
+P07,production,PROD,N/A,0,"Off-site / cross-region disaster recovery","Requires a second cluster (VerticaReplicator CR or replicated object storage)."
+P08,production,PROD,N/A,0,"Metrics-driven autoscaling (VerticaAutoscaler + Prometheus/KEDA) and K8s node autoscaling","Needs a cluster autoscaler / cloud capacity; here scaling is triggered by CR changes."
+P09,production,PROD,N/A,0,"Online rolling upgrade between Vertica releases (upgradePolicy: Online)","Needs a second; newer image version and production-sized subclusters."
+P10,production,PROD,N/A,0,"Enterprise identity & secrets (LDAP/Kerberos, AWS Secrets Manager / Google Secret Manager, CA-signed certificates, etcd encryption at rest)","Requires corporate infrastructure; the lab uses Kubernetes Secrets and operator self-signed certificates."
+P11,production,PROD,N/A,0,"Load balancers / ingress with real external IPs and DNS","Lab exposes NodePorts on 127.0.0.1 only."
+P12,production,PROD,N/A,0,"Workload identity for communal storage (IRSA on Amazon EKS)","Vertica pods use their service-account JWT; exchanged through the cluster's OIDC provider for temporary S3 credentials; so no static access keys are stored (Vertica docs: IRSA profile authentication). Needs EKS and AWS IAM."
+P13,production,PROD,N/A,0,"Production identity provider for OAuth 2.0 / JWT (Okta, OTDS, or Keycloak in production mode)","The lab Keycloak runs in dev mode (in-memory database; HTTP inside the cluster). Production: HTTPS endpoints; a highly available IdP; just-in-time user provisioning and role mapping from token claims."
+
+Metrics (test,metric,value,unit,note):
+test,metric,value,unit,note
+T02,load.sales_rows,5000000,rows,""
+T02,load.elapsed,1,s,""
+T02,load.throughput,2660989,rows/s,"INSERT..SELECT incl. join, 3 nodes"
+T02,load.segmentation_skew,1.000000000000000000,max/min,"1.00 = perfectly even"
+T03,q1.median,102,ms,"star join + GROUP BY month/region"
+T03,q2.median,65,ms,"top-10 customers RANK()"
+T03,q3.median,30,ms,"7-day moving average window"
+T03,q4.median,141,ms,"distinct customers per category"
+T03,q5.median,6,ms,"point lookup"
+T03,q6.median,824,ms,"90th percentile per channel"
+T03,depot.q1_cold,115,ms,"data fetched from communal storage"
+T03,depot.q1_warm,102,ms,"served from local depot"
+T03,concurrency.sessions,8,sessions,""
+T03,concurrency.throughput,17.75,queries/s,""
+T03,concurrency.errors,0,errors,""
+T03,copy.rows,500000,rows,""
+T03,copy.throughput,1515151,rows/s,"COPY FROM LOCAL client->cluster"
+T04,communal.objects,473,objects,"in s3://vertica-lab/labdb-20261105001639"
+T07,m2m.token_request,112,ms,"client_credentials grant"
+T07,m2m.db_login,132,ms,"token validated by Vertica (JWT, JWKS keys)"
+T08,isolation.etl_max_queued,0,queries,"admission control in lab_etl_pool"
+T08,isolation.bi_latency_idle,35,ms,""
+T08,isolation.bi_latency_during_etl,31,ms,"same physical CPUs on one workstation"
+T09,reconcile.service_recreate,3,s,""
+T09,reconcile.sts_drift_fix,3,s,""
+T10,selfheal.process.detect,46,s,"crash -> node DOWN in catalog"
+T10,selfheal.process.recovery,49,s,"crash -> node UP"
+T10,selfheal_process.client_queries,13,ok,"6 failed or timed out"
+T10,selfheal_process.client_availability,23.3,%,"time-weighted over the 60s window"
+T10,selfheal_process.longest_outage,46,s,"longest continuous period without a successful query"
+T10,selfheal_process.max_ok_latency,56,ms,""
+T11,selfheal.pod.recovery,27,s,"delete -> node UP"
+T11,selfheal_pod.client_queries,48,ok,"1 failed or timed out"
+T11,selfheal_pod.client_availability,85.2,%,"time-weighted over the 61s window"
+T11,selfheal_pod.longest_outage,9,s,"longest continuous period without a successful query"
+T11,selfheal_pod.max_ok_latency,511,ms,""
+T12,nodefail.vertica_detect,47,s,""
+T12,nodefail.k8s_detect,47,s,"node-monitor-grace-period"
+T12,nodefail.recovery_after_restore,15,s,"node back -> 3/3 UP"
+T12,nodefail.client_queries,54,ok,"8 failed or timed out"
+T12,nodefail.client_availability,53.8,%,"time-weighted over the 106s window"
+T12,nodefail.longest_outage,45,s,"longest continuous period without a successful query"
+T12,nodefail.max_ok_latency,52,ms,""
+T13,backup.save_restore_point,5,s,""
+T13,backup.table_restore,5,s,""
+T13,backup.revive_rto,62,s,"revive -> 3/3 UP"
+T13,backup.total_outage,78,s,"shutdown+delete+revive"
+T14,scaling.add_subcluster,27,s,""
+T14,scaling.scale_out_1_to_2,33,s,""
+T14,isolation.primary_latency_idle,21,ms,""
+T14,isolation.primary_latency_analytics_busy,17,ms,"shared workstation CPU"
+T14,scaling.scale_in_2_to_1,23,s,""
+T14,scaling.remove_subcluster,24,s,""
+
+PROD-CLUSTER-ONLY capabilities:
+P01	Permanent host loss with pod rescheduling onto another physical machine	Local-path PVs pin each Vertica pod to one node; production needs network/replicated CSI storage (EBS, Ceph, Portworx, vSAN) so the StatefulSet pod can restart elsewhere.
+P02	Kubernetes control-plane high availability	kind here has 1 control-plane; production uses 3+ control-plane nodes / managed K8s with an etcd quorum.
+P03	Zone / rack fault domains	Needs real failure domains with topologySpreadConstraints / zone labels; all 'nodes' here share one workstation.
+P04	Real network partitions, NIC/switch failures and latency between hosts	Simulated only by freezing a node container; real Spread heartbeat behaviour needs separate hosts.
+P05	Production performance and capacity benchmarks	All pods share the same CPU, RAM and SSD; numbers are relative, not sizing guidance.
+P06	Durable communal storage	A single MinIO pod on one disk is not durable; production uses S3 or an erasure-coded/replicated on-prem object store with TLS.
+P07	Off-site / cross-region disaster recovery	Requires a second cluster (VerticaReplicator CR or replicated object storage).
+P08	Metrics-driven autoscaling (VerticaAutoscaler + Prometheus/KEDA) and K8s node autoscaling	Needs a cluster autoscaler / cloud capacity; here scaling is triggered by CR changes.
+P09	Online rolling upgrade between Vertica releases (upgradePolicy: Online)	Needs a second, newer image version and production-sized subclusters.
+P10	Enterprise identity & secrets (LDAP/Kerberos, AWS Secrets Manager / Google Secret Manager, CA-signed certificates, etcd encryption at rest)	Requires corporate infrastructure; the lab uses Kubernetes Secrets and operator self-signed certificates.
+P11	Load balancers / ingress with real external IPs and DNS	Lab exposes NodePorts on 127.0.0.1 only.
+P12	Workload identity for communal storage (IRSA on Amazon EKS)	Vertica pods use their service-account JWT, exchanged through the cluster's OIDC provider for temporary S3 credentials, so no static access keys are stored (Vertica docs: IRSA profile authentication). Needs EKS and AWS IAM.
+P13	Production identity provider for OAuth 2.0 / JWT (Okta, OTDS, or Keycloak in production mode)	The lab Keycloak runs in dev mode (in-memory database, HTTP inside the cluster). Production: HTTPS endpoints, a highly available IdP, just-in-time user provisioning and role mapping from token claims.
+
+Detailed per-test assertions:
+T01  PASS|Kubernetes: 4/4 nodes Ready
+T01  PASS|VerticaDB operator Deployment available
+T01  PASS|Admission webhook registered (invalid CR changes are rejected)
+T01  PASS|Communal storage (MinIO) ready
+T01  PASS|Identity provider (Keycloak) ready
+T01  PASS|VerticaDB pods Ready: 3/3
+T01  PASS|Persistent volume claims Bound: 3/3
+T01  PASS|Vertica nodes UP: 3/3
+T01  PASS|Database is K-safe (current fault tolerance 1)
+T01  PASS|Eon communal storage location registered
+T02  PASS|Row count verified: lab.sales = 5000000
+T02  PASS|Referential integrity: 0 orphan sales rows
+T03  PASS|Analytic query benchmark completed (results in perf.csv)
+T03  PASS|Depot cold/warm comparison captured (cold 115 ms vs warm 102 ms)
+T03  PASS|Concurrent workload: 40 queries, 0 errors
+T03  PASS|COPY loaded 500,000 rows
+T04  PASS|Each Vertica pod has its own Bound PersistentVolume (catalog + depot)
+T04  PASS|Local data volume mounted in pod: /dev/nvme0n1p5  232G  115G  105G  53% /home/dbadmin/local-data
+T04  PASS|Communal storage holds 473 objects (data survives loss of every pod)
+T05  PASS|metrics-server: live resource metrics available
+T05  PASS|Operator /metrics (HTTPS, RBAC-authorised token) exposes 46 vertica_* samples
+T05  PASS|Anonymous scrape of operator metrics is rejected (HTTP 401)
+T05  PASS|The service-account token is a signed JWT (machine-to-machine identity): alg=RS256, iss=https://kubernetes.default.svc.cluster.local, sub=system:serviceaccount:vertica-lab:vlab-client, aud=["https://kubernetes.default.svc.cluster.local"], lifetime 600 s
+T05  PASS|JWT with a tampered signature is rejected (HTTP 500: Authentication failed )
+T05  PASS|JWT issued for another audience is rejected (HTTP 500: Authentication failed )
+T05  PASS|A valid JWT of another service account is accepted: the chart binds metrics-reader to system:authenticated (documented default)
+T05  PASS|Vertica server Prometheus endpoint https://<pod>:8443/v1/metrics — 634 samples (TLS)
+T05  PASS|System-table monitoring (v_monitor.*) queried successfully
+T05  PASS|Operator emits Kubernetes events for the VerticaDB (43 events in the last hour)
+T06  PASS|Superuser password only referenced via Secret (not present in CR / StatefulSet specs)
+T06  PASS|Vertica server container runs as non-root (uid 5000)
+T06  PASS|RBAC: read-only SA can list pods
+T06  PASS|RBAC: read-only SA is denied delete on VerticaDB
+T06  PASS|RBAC: read-only SA is denied access to Secrets
+T06  PASS|DB RBAC: lab_reader can SELECT (5000000 rows)
+T06  PASS|DB RBAC: INSERT by read-only user is denied
+T06  PASS|Failed login attempt recorded in v_monitor.login_failures (2)
+T06  PASS|Client-server TLS: vsql -m require session ssl_state=Server
+T06  PASS|Plain-text (non-TLS) remote logins are rejected (TLS enforced by the auth policy)
+T06  PASS|Data channel between nodes uses TLS: mode VERIFY_CA, certificate data_channel_cert_0 from Kubernetes Secret vdb-internode-tls-f592x
+T06  PASS|Control channel (Spread) between nodes is encrypted (EncryptSpreadComm=vertica)
+T06  PASS|Operator reports all TLS configurations: clientServer=try_verify, interNode=verify_ca, httpsNMA=try_verify
+T06  PASS|HTTPS service (8443) answers over TLS (HTTP 401)
+T06  PASS|NetworkPolicy: labelled client pod still connects to 5433
+T06  PASS|NetworkPolicy: unlabelled pod is blocked from 5433 (zero-trust ingress)
+T07  PASS|Identity provider Keycloak ready (realm vertica-lab, OpenID Connect)
+T07  PASS|Service svc_etl obtained a signed JWT from Keycloak with grant_type=client_credentials (no human user, no password)
+T07  PASS|Vertica accepted the JWT: session user=svc_etl, TLS=Server, authentication method=OAuth
+T07  PASS|svc_etl can read what it was granted (lab.sales: 5000000 rows)
+T07  PASS|svc_etl cannot write (INSERT denied)
+T07  PASS|svc_etl cannot drop tables (DROP denied)
+T07  PASS|Identity comes from the token: asking for 'dbadmin' still opens a svc_etl session (no privilege escalation)
+T07  PASS|JWT with a tampered signature is rejected
+T07  PASS|JWT with a forged payload (azp=dbadmin, original signature) is rejected
+T07  PASS|Valid JWT without the 'vertica' audience is rejected (svc_other, aud=null)
+T07  PASS|Short-lived JWT (15 s) works while valid
+T07  PASS|Expired JWT is rejected
+T07  PASS|Password login as svc_etl is impossible (the account has no password; only tokens work)
+T07  PASS|Audit: OAuth logins in v_monitor.user_sessions (6), rejected tokens in v_monitor.login_failures (3)
+T07  PASS|Signing-key rotation: a token signed with the NEW key (kid 1B7Ug1yX…) is accepted without any change in Vertica (keys fetched from JWKS)
+T08  PASS|Resource pools lab_etl_pool (capped) and lab_bi_pool (high priority) created
+T08  PASS|BI queries executed in lab_bi_pool
+T08  PASS|ETL queries executed in lab_etl_pool
+T09  PASS|Deleted Service recreated by the operator
+T09  PASS|StatefulSet drift corrected to the CR's desired state
+T09  PASS|All Vertica nodes UP after drift correction
+T09  PASS|Database unaffected while the operator is down (3/3 UP)
+T09  PASS|Operator Deployment self-healed
+T09  PASS|Reconciliation resumed after operator restart
+T09  PASS|Webhook rejects changing immutable shardCount
+T09  PASS|Webhook rejects renaming the database
+T09  PASS|Webhook rejects shrinking the K-safe primary subcluster below 3
+T10  PASS|Database stayed UP with K-safety while a node was down (2/3 UP)
+T10  PASS|Crashed Vertica process automatically restarted and rejoined
+T10  PASS|Client application recovered automatically after the process crash: longest outage 46s, availability 23.3% over the 60s window
+T11  PASS|Pod recreated by StatefulSet controller
+T11  PASS|Deleted pod recovered and Vertica node rejoined automatically
+T11  PASS|Same PersistentVolume re-attached (pvc-<uuid>) — catalog/depot persisted
+T11  PASS|No data loss: lab.sales still 5000000 rows
+T11  PASS|Client application recovered automatically after the pod deletion: longest outage 9s, availability 85.2% over the 60s window
+T12  PASS|Reads AND writes succeed with 1 of 3 nodes failed (K-safety 1)
+T12  PASS|Node failure fully recovered without manual intervention
+T12  PASS|Client application recovered automatically after the node freeze: longest outage 45s, availability 53.8% over the 60s window
+T13  PASS|Restore point saved via VerticaRestorePointsQuery (SaveRestorePoint)
+T13  SKIP|Logical backup (EXPORT TO PARQUET) skipped: the ParquetExport package is not part of the '-minimal' Vertica image (use the full image to enable it)
+T13  PASS|Object-level restore: dropped table recovered with 100 rows
+T13  PASS|Database deployment destroyed: no pods, no local volumes — only communal storage remains
+T13  PASS|Database revived from communal storage on brand-new pods/volumes
+T13  PASS|Point-in-time restore: bk_orders = 10,000 (the 5,000 post-backup rows are gone)
+T13  PASS|Fact table intact after DR: lab.sales = 5000000
+T14  PASS|Scale-out: new subcluster added online
+T14  PASS|Scale-out: analytics grew to 2 nodes
+T14  PASS|Workload isolation: every session via service vdb-analytics lands on the analytics subcluster
+T14  PASS|Workload isolation: sessions via vdb-primary stay on the primary subcluster
+T14  PASS|Scale-in: node drained and removed from catalog
+T14  PASS|Subcluster removed; database back to 3 node(s)
+T15  PASS|Kubernetes: 4/4 nodes Ready
+T15  PASS|VerticaDB operator Deployment available
+T15  PASS|Admission webhook registered (invalid CR changes are rejected)
+T15  PASS|Communal storage (MinIO) ready
+T15  PASS|Identity provider (Keycloak) ready
+T15  PASS|VerticaDB pods Ready: 3/3
+T15  PASS|Persistent volume claims Bound: 3/3
+T15  PASS|Vertica nodes UP: 3/3
+T15  PASS|Database is K-safe (current fault tolerance 1)
+T15  PASS|Eon communal storage location registered
+T15  PASS|Host Vertica untouched: version, processes, ports, config mtime, dbadmin and unit identical to run start
+T15  PASS|All kind node containers running (none left paused/stopped)
+T15  PASS|Reboot safety: kind node restart policy = no
+T15  PASS|No temporary test objects left behind
