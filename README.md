@@ -17,7 +17,7 @@ sudo ./vertica-k8s-lab.sh --test        # 15 tests, about 10 minutes
 
 ### The video (5 minutes)
 
-[![Vertica on Kubernetes: putting the operator through its paces. Watch the 5-minute video](media/thumbnail.png)](https://youtu.be/YOUR_VIDEO_ID)
+[![Vertica on Kubernetes: putting the operator through its paces. Watch the 5-minute video](media/thumbnail.png)](https://youtu.be/VfkiKaPiN0k)
 
 What the script builds, the install, the 15 tests, the failures on purpose and the
 result, with footage of a real run. English narration; English and Hebrew subtitles.
