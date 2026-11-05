@@ -9,12 +9,6 @@ sudo ./vertica-k8s-lab.sh --install     # about 5 minutes
 sudo ./vertica-k8s-lab.sh --test        # 15 tests, about 10 minutes
 ```
 
-> This is a demo, provided "as is", without warranties of any kind. It ran in a
-> single-workstation sandbox; the results are not a production benchmark,
-> certification or sizing guidance. For production, also test the items in
-> [docs/production-checklist.md](docs/production-checklist.md), using the Vertica
-> documentation for your version.
-
 ### The video (5 minutes)
 
 [![Vertica on Kubernetes: putting the operator through its paces. Watch the 5-minute video](media/thumbnail.png)](https://youtu.be/VfkiKaPiN0k)
@@ -51,7 +45,7 @@ its paces, including breaking things on purpose. Three rules:
 
 1. **Automate everything in one script:** install, demo, test and clean up.
 2. **Use only official building blocks:** the operator's Helm chart from
-   `vertica.github.io/charts` and the official `opentext/vertica-k8s` server image.
+   `vertica.github.io/charts` and the official Vertica server image.
 3. **Don't just run it. Break it on purpose, and measure what happens.**
 
 This repository is the result: the script, the full logs of one validation run, and
@@ -110,7 +104,7 @@ More detail: [docs/architecture.md](docs/architecture.md).
 |---|---|
 | Kubernetes | kind v0.30.0, Kubernetes v1.34.0; 1 control-plane and 3 workers |
 | Operator | Helm chart `vertica-charts/verticadb-operator` 26.2.2 |
-| Vertica | Server 26.2.0-4 (`opentext/vertica-k8s:26.2.0-4-minimal`), Eon Mode, database `labdb`, 3-node primary subcluster, K-safety 1, one primary pod per worker |
+| Vertica | Server 26.2.0-4 (official minimal image), Eon Mode, database `labdb`, 3-node primary subcluster, K-safety 1, one primary pod per worker |
 | Communal storage | MinIO (S3-compatible), bucket `vertica-lab` |
 | TLS | Operator-managed TLS on three layers: client-server, HTTPS/node management agent, and **between the nodes** (VERIFY_CA, Spread encrypted). Plain-text remote logins are rejected. |
 | Identity | Keycloak 26.7.5, realm `vertica-lab`, service clients that log in with `client_credentials` |
@@ -450,10 +444,12 @@ media/                        the video's thumbnail and an animated excerpt
 
 This is a demo test, provided "as is", without warranties of any kind. It ran in a
 single-workstation sandbox; the results are not a production benchmark, certification
-or sizing guidance. For production, also test the items in section 9, using the Vertica
+or sizing guidance. For production, also test the items in
+[section 9](#9-for-production-also-test) and
+[docs/production-checklist.md](docs/production-checklist.md), using the Vertica
 documentation for your version.
 
-This project is not affiliated with or endorsed by OpenText. Vertica is a trademark of
-its owner; all other trademarks belong to their respective owners.
+Vertica, Rocket Software, Kubernetes, Helm, Keycloak, MinIO and all other product and
+company names are trademarks or registered trademarks of their respective owners.
 
 The script is released under the [MIT License](LICENSE).

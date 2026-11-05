@@ -12,7 +12,7 @@
 #               S3-compatible communal storage, the official VerticaDB operator
 #               (Helm chart vertica-charts/verticadb-operator, 26.3.x) and an
 #               Eon Mode VerticaDB (3-node K-safe primary subcluster) from the
-#               official opentext/vertica-k8s 26.3 image.
+#               official Vertica server image (26.3, or the newest published).
 #   --test      Runs an automated production-readiness test suite with PASS /
 #               FAIL / WARN reporting, SQL workloads and performance metrics:
 #               health, workload, performance, persistent storage, monitoring,
@@ -111,7 +111,7 @@ readonly SCRIPT_NAME="${SCRIPT_PATH##*/}"
 LAB_DIR="${LAB_DIR:-/opt/vertica-k8s-lab}"
 TARGET_FROM_ENV="${VERTICA_TARGET_VERSION:+1}"
 VERTICA_TARGET_VERSION="${VERTICA_TARGET_VERSION:-26.3}"   # e.g. 26.2 while 26.3 images are unpublished
-VERTICA_IMAGE="${VERTICA_IMAGE:-}"                     # e.g. opentext/vertica-k8s:26.3.0-0-minimal
+VERTICA_IMAGE="${VERTICA_IMAGE:-}"                     # e.g. an official Vertica server image tag
 VERTICA_IMAGE_FLAVOR="${VERTICA_IMAGE_FLAVOR:-minimal}" # minimal | full
 OPERATOR_CHART_VERSION="${OPERATOR_CHART_VERSION:-}"   # auto: newest 26.3.x chart
 ALLOW_OPERATOR_FALLBACK="${ALLOW_OPERATOR_FALLBACK:-false}" # true => newest chart if no 26.3.x
