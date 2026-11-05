@@ -17,7 +17,7 @@ sudo ./vertica-k8s-lab.sh --test        # 15 tests, about 10 minutes
 
 ### The video (5 minutes)
 
-[![Vertica on Kubernetes: is the operator production-ready? Watch the 5-minute video](media/thumbnail.png)](https://youtu.be/PASTE_VIDEO_ID)
+[![Vertica on Kubernetes: putting the operator through its paces. Watch the 5-minute video](media/thumbnail.png)](https://youtu.be/YOUR_VIDEO_ID)
 
 What the script builds, the install, the 15 tests, the failures on purpose and the
 result, with footage of a real run. English narration; English and Hebrew subtitles.
@@ -42,11 +42,12 @@ result, with footage of a real run. English narration; English and Hebrew subtit
 
 ## 1. Why this lab exists
 
-Recently, a customer asked a simple question: *is the Vertica Kubernetes operator mature
-enough for production?*
+Most of my work with Vertica is about what it does best: powerful analytics at scale.
+This time I wanted to explore a different side of Vertica: running on Kubernetes, where
+the Vertica operator automates deployment, recovery, security and scaling.
 
-Many customers already run Vertica on Kubernetes. Still, I wanted to answer from my own
-hands, not from a slide. So I tested it in my sandbox, with three rules:
+So I built a test lab on one Ubuntu workstation, with one goal: put the operator through
+its paces, including breaking things on purpose. Three rules:
 
 1. **Automate everything in one script:** install, demo, test and clean up.
 2. **Use only official building blocks:** the operator's Helm chart from
