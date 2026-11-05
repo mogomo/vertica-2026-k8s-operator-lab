@@ -15,6 +15,13 @@ sudo ./vertica-k8s-lab.sh --test        # 15 tests, about 10 minutes
 > [docs/production-checklist.md](docs/production-checklist.md), using the Vertica
 > documentation for your version.
 
+### The video (5 minutes)
+
+[![Vertica on Kubernetes: is the operator production-ready? Watch the 5-minute video](media/thumbnail.png)](https://youtu.be/PASTE_VIDEO_ID)
+
+What the script builds, the install, the 15 tests, the failures on purpose and the
+result, with footage of a real run. English narration; English and Hebrew subtitles.
+
 ---
 
 ## Contents
@@ -68,6 +75,8 @@ what I learned along the way.
 
 Everything runs inside Docker on one Ubuntu workstation, using
 [kind](https://kind.sigs.k8s.io/) ("Kubernetes in Docker").
+
+![What the script builds, step by step (from the video)](media/what-the-script-builds.gif)
 
 ```mermaid
 flowchart LR
@@ -433,6 +442,7 @@ logs/                         the validation run (sanitized), see logs/README.md
   console/                    what the terminal showed, for each command
   run/                        the script's detailed run logs (every command and output)
   report/                     summary.txt, results.csv, perf.csv, client load samples
+media/                        the video's thumbnail and an animated excerpt
 ```
 
 ## 11. Disclaimer and license
